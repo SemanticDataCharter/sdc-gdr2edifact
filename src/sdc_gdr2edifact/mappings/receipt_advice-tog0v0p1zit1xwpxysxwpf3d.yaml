@@ -1,0 +1,366 @@
+# Receipt Advice (business documents library) to UN/EDIFACT D.24A RECADV
+# Written by tools/build_mapping.py from tools/specs/receipt_advice.py; labels in the comments.
+mapping:
+  id: receipt-advice-edifact-d24a
+  version: 1
+  author: Axius SDC, Inc.
+  date: '2026-10-25'
+  description: 'The Receipt Advice model''s values in a D.24A RECADV. Declared: the library links its components to UBL, not
+    to UN/EDIFACT.'
+model:
+  ct_id: tog0v0p1zit1xwpxysxwpf3d
+  schema_sha256: 6a7deb9c980adb2c6d8c8165c95ae8824e3eca2135e5c1ba9e5865b0412e5db8
+target:
+  name: UN/EDIFACT
+  version: D.24A
+rules:
+  # Receipt Advice Governed Record
+  - {cluster: oocnj5uo4fkqs2zgxc85657g, to: RECADV}
+  # Receipt Advice
+  - {cluster: il8xc8x7botqkf7tje5szz03, to: .}
+  # Audit Event
+  - {cluster: t2tvd3wylxrstdeu5aw6gkw1, to: '-', transform: omit, reason: 'the record''s audit event: UN/EDIFACT has no place for it'}
+  # PROV Activity
+  - {cluster: vmikfu0irht9fmq7q02t3oqs, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Agent
+  - {cluster: c179ilk2ns15cd5rzzdfd6f6, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Entity
+  - {cluster: q0ckidtsg1x3iav6nrt8fo0l, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # Receipt Advice Document
+  - {cluster: fe17qp78l2yemauxwtoskjz5, to: .}
+  # Customization ID
+  - {component: rgnvj03kjtej1s8brdeil4kq, to: '-', transform: omit, reason: a UBL customization identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile ID
+  - {component: ato2r6lpk92i9e5djcwrna74, to: '-', transform: omit, reason: a UBL profile identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile Execution ID
+  - {component: blz32vkqw11awazaklpdih7b, to: '-', transform: omit, reason: a UBL profile execution identifier; UN/EDIFACT has no element for it}
+  # Document UUID
+  - {component: wa674d96vzd8um4nwbtjrorz, to: '-', transform: omit, reason: a UBL document UUID; the message is identified by BGM's document number}
+  # Copy Indicator
+  - {component: nsv2eblxq8s0vk28ue2vh1fl, to: '-', transform: omit, reason: UN/EDIFACT's message function (BGM 1225) does not distinguish a copy from an original here}
+  # Issue Date
+  - {component: tkd16hhh9wbn0qya2ykm0552, to: DTM~137/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~137/@C507.2005, transform: constant, value: '137'}, {to: /RECADV/=UNB/@S004.0017, transform: format, format: '%y%m%d'}]}
+  # Issue Time
+  - {component: oybfzltffyfioix1zdblxcp3, to: DTM~137/@C507.2380+, transform: format, format: '%H%M%S', also: [{to: /RECADV/=UNB/@S004.0019, transform: format, format: '%H%M'}]}
+  # Receipt Advice ID
+  - {component: n8ktn56c09i6kzy6kxzqs53j, to: BGM/@C106.1004, transform: copy}
+  # Receipt Advice Type
+  - {component: eon5e85nnanzy6mlb60kati0, to: BGM/@C002.1001, transform: code, table: {Delivery: '632', Return: '632'}}
+  # Document Status
+  - {component: mnuyvuxqsy0qskx8hiy6epff, to: BGM/@1225, transform: code, table: {Original: '9', Revised: '5', Cancelled: '1'}}
+  # Note
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, to: FTX~AAI/@C108.4440, transform: copy, also: [{to: FTX~AAI/@4451, transform: constant, value: AAI}]}
+  # Line Count
+  - {component: c1c7iydc13os47ppwwtwsnum, to: /RECADV/CNT~2/@C270.6066, transform: copy, also: [{to: /RECADV/CNT~2/@C270.6069, transform: constant, value: '2'}]}
+  # Order Reference
+  - {cluster: zj2hjn6wx3dfa0h5vlzeexhw, to: .}
+  # Order ID
+  - {component: wtnd4hzyrntlwtp4z3l1gcpr, to: SG1~ON/RFF/@C506.1154, transform: copy, also: [{to: SG1~ON/RFF/@C506.1153, transform: constant, value: 'ON'}]}
+  # Issue Date (within Order Reference)
+  - {component: tkd16hhh9wbn0qya2ykm0552, within: [zj2hjn6wx3dfa0h5vlzeexhw], to: SG1~ON/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~ON/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Sales Order ID
+  - {component: mllhwxhu0zvxhwt32em2t821, to: SG1~VN/RFF/@C506.1154, transform: copy, also: [{to: SG1~VN/RFF/@C506.1153, transform: constant, value: VN}]}
+  # Order Type
+  - {component: q9k20amngqerxvhpvhwn9t3q, to: '-', transform: omit, reason: RECADV refers to the order by its number (RFF ON); the order's type is the order's}
+  # Despatch Document Reference
+  - {cluster: ulo971f5gnqane7k9pd5iog3, to: .}
+  # Document Reference
+  - {cluster: ouhl662e9dzv99ng02kotdsx, to: .}
+  # Document Reference ID (within Despatch Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [ulo971f5gnqane7k9pd5iog3], to: SG1~AAK/RFF/@C506.1154, transform: copy, also: [{to: SG1~AAK/RFF/@C506.1153, transform: constant, value: AAK}]}
+  # Document Reference Issue Date (within Despatch Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [ulo971f5gnqane7k9pd5iog3], to: SG1~AAK/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~AAK/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Type
+  - {component: arra8d8x6kv6l5mluiomye3t, to: '-', transform: omit, reason: 'a reference group carries a reference number and its date, not the document''s type'}
+  # Document Description
+  - {component: z181ta9jftxc7k63rv4nz1zv, to: '-', transform: omit, reason: 'a reference group carries a reference number and its date, not a description'}
+  # Delivery Customer Party
+  - {cluster: s8tx9ictdkar3opfjsb2r1oo, to: /RECADV/SG4/NAD, attributes: {'3035': DP}}
+  # Despatch Supplier Party
+  - {cluster: cdyq0vg2nh68yutkqc4ytzph, to: /RECADV/SG4/NAD, attributes: {'3035': SU}}
+  # Buyer Customer Party
+  - {cluster: nylve3b8ss572vh8zso2u4l7, to: /RECADV/SG4/NAD, attributes: {'3035': BY}}
+  # Seller Supplier Party
+  - {cluster: xkkk5vyegpy4xdig8vnabstc, to: /RECADV/SG4/NAD, attributes: {'3035': SE}}
+  # Party Identification Value
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, to: '@C082.3039', transform: copy}
+  # Party Identification Value (within Delivery Customer Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [s8tx9ictdkar3opfjsb2r1oo], to: '@C082.3039', transform: copy, also: [{to: /RECADV/=UNB/@S002.0004, transform: copy}, {to: /RECADV/=UNB/@S002.0007, transform: constant, value: '14'}]}
+  # Party Identification Value (within Despatch Supplier Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [cdyq0vg2nh68yutkqc4ytzph], to: '@C082.3039', transform: copy, also: [{to: /RECADV/=UNB/@S003.0010, transform: copy}, {to: /RECADV/=UNB/@S003.0007, transform: constant, value: '14'}]}
+  # Supplier Party
+  - {cluster: utcj07ovkb7ntkbq8ix0ro4l, to: .}
+  # Customer Party
+  - {cluster: asbbdn0eof6713wx4y2e90c2, to: .}
+  # Party
+  - {cluster: useph7s4ienfhwerqx2thedj, to: .}
+  # Party Identification
+  - {cluster: z0gdpy67iot29gdc2zq2v1jj, to: .}
+  # Party Legal Entity
+  - {cluster: cslzdtawth1xxjjslf1975qt, to: .}
+  # US Address
+  - {cluster: jqgvof35d7y83wkfcgiic5em, to: .}
+  # International Address
+  - {cluster: upawqojmcfg3qsf4ffzi47ho, to: .}
+  # Party Identification Scheme
+  - {component: c9v9nkkg6b8sixoaf55vyjrn, to: '@C082.3055', transform: code, table: {Global Location Number (GS1): '9', DUNS number: '16', Assigned by the buyer: '92', Assigned by the seller: '91', Tax identifier: ZZZ, Company registration number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit, also: [{to: '@C082.1131', transform: code, table: {Tax identifier: TAX, Company registration number: CRN}, on_miss: omit}]}
+  # Organization Name
+  - {component: xcn8r67fg7soty17homzok44, to: '@C080.3036', transform: copy}
+  # Registration Name
+  - {component: ev7lhh4t59tt8ot0tfoaztb6, to: '@C080.3036#2', transform: copy}
+  # Company ID
+  - {component: axizk9c3k82w84p1t1wkwayu, to: ../SG5~XA/RFF/@C506.1154, transform: copy, also: [{to: ../SG5~XA/RFF/@C506.1153, transform: constant, value: XA}]}
+  # Customer Assigned Account ID
+  - {component: ybdlctks32zkkteycr5y1eq8, to: ../SG5~IA/RFF/@C506.1154, transform: copy, also: [{to: ../SG5~IA/RFF/@C506.1153, transform: constant, value: IA}]}
+  # Supplier Assigned Account ID
+  - {component: nhvx21mf5ac81670xyrpwbaz, to: ../SG5~IT/RFF/@C506.1154, transform: copy, also: [{to: ../SG5~IT/RFF/@C506.1153, transform: constant, value: IT}]}
+  # Address (Line 1)
+  - {component: ncxxt7wgs7soxw7kbmapxvg3, to: '@C059.3042', transform: copy}
+  # Address (Line 2)
+  - {component: sexw93x5276zwsn1qx15htpv, to: '@C059.3042#2', transform: copy}
+  # City Name
+  - {component: toysvef93azt57fgh8rwpd4b, to: '@3164', transform: copy}
+  # US State Code
+  - {component: k9tqm489kilg33mx4cibyto6, to: '@C819.3229', transform: copy}
+  # Region Name
+  - {component: jw1b9q6ulyte599sdsqp2mvp, to: '@C819.3228', transform: copy}
+  # US ZIP Code
+  - {component: cjzq0xnrm0uu8p1h51koheoz, to: '@3251', transform: copy}
+  # Postal Code
+  - {component: gf841eedvv6cjiegs934srai, to: '@3251', transform: copy}
+  # Country Code ISO 3166
+  - {component: f2jicaigehz7xmwcp1gm5gh0, to: '@3207', transform: copy}
+  # Party Contact
+  - {cluster: kibeh8vp79shumcdyj8xzqw1, to: ../SG6/CTA, attributes: {'3139': IC}}
+  # Contact Point
+  - {cluster: d2xwhnb2vqzxw70jcizj9csx, to: .}
+  # Contact Name
+  - {component: fp533gyfb6yatp6jgpg2emb2, to: '@C056.3412', transform: copy}
+  # Phone Number
+  - {component: zpfwg52r88j6jdypj7rg71ke, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: TE}]}
+  # Fax Number
+  - {component: ll6ltsnvakomixuitxkbkxfz, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: FX}]}
+  # Email Address
+  - {component: q922mqaon3yn5zlwf2bszf28, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: EM}]}
+  # Website URL
+  - {component: wriny2gz8aqcvffmfpwbompk, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: AH}]}
+  # Endpoint ID
+  - {component: fpb149j9um0l676icmhyp56d, to: '-', transform: omit, reason: the party's identification in NAD is its address for interchange; NAD has no separate endpoint}
+  # Contact Department
+  - {component: bkw6awwe7kp01kowlwbgn21b, to: '-', transform: omit, reason: 'CTA''s contact identifier (3413) is a code of at most 17 characters, not a department''s name'}
+  # Contact Job Title
+  - {component: ozkpv9buivm77ozkybm0ww39, to: '-', transform: omit, reason: CTA has no element for a job title}
+  # Contact Method
+  - {component: miqo30r5b554nyj7ubryw43x, to: '-', transform: omit, reason: COM's channel (3155) is set by the number written; there is no preferred method}
+  # Contact Use
+  - {component: vmruk4j9y1orvvz8cwafrax5, to: '-', transform: omit, reason: COM has no element for the use of a contact point}
+  # Address Use
+  - {component: b25dj42zxhm19pih328ga8pl, to: '-', transform: omit, reason: NAD has no element for the use of an address}
+  # Carrier Party
+  - {cluster: fzihiybv5hemngvjwzuhwjun, to: /RECADV/SG4~CA/NAD, attributes: {'3035': CA}}
+  # Receipt Shipment
+  - {cluster: pm67ictih5mq3sivwv25s6ma, to: /RECADV/SG16~ship/CPS, attributes: {'7164': '#seq', '7075': '5'}, order: 0}
+  # Shipment ID
+  - {component: kkskzpaxwvq35hu7d58lri9i, to: /RECADV/SG1~SRN/RFF/@C506.1154, transform: copy, also: [{to: /RECADV/SG1~SRN/RFF/@C506.1153, transform: constant, value: SRN}]}
+  # Actual Delivery Date
+  - {component: takj7piwqpg73xsaz5oxnhpn, to: /RECADV/DTM~35/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: /RECADV/DTM~35/@C507.2005, transform: constant, value: '35'}]}
+  # Actual Delivery Time
+  - {component: nrjif7vo6mag1owqt1r9v6yu, to: /RECADV/DTM~35/@C507.2380+, transform: format, format: '%H%M%S'}
+  # Consignment
+  - {cluster: qctc9amczcwtdzsagogn74kq, to: .}
+  # Consignment ID
+  - {component: rja27fqwdoq0t7b2lq0nlyxn, to: /RECADV/SG1~CU/RFF/@C506.1154, transform: copy, also: [{to: /RECADV/SG1~CU/RFF/@C506.1153, transform: constant, value: CU}]}
+  # Carrier Assigned ID
+  - {component: jyf4t7vmhv3v7nr5jv4go4uf, to: /RECADV/SG1~BN/RFF/@C506.1154, transform: copy, also: [{to: /RECADV/SG1~BN/RFF/@C506.1153, transform: constant, value: BN}]}
+  # Delivery
+  - {cluster: sy3rqkwaui6b7gfjbqxb15wt, to: .}
+  # Delivery ID
+  - {component: xxnvc50tm2l6hqejitd5lalh, to: /RECADV/SG1~AAJ/RFF/@C506.1154, transform: copy, also: [{to: /RECADV/SG1~AAJ/RFF/@C506.1153, transform: constant, value: AAJ}]}
+  # Latest Delivery Date
+  - {component: z180eu0o81qv2cfgjejo5unw, to: /RECADV/DTM~17/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: /RECADV/DTM~17/@C507.2005, transform: constant, value: '17'}]}
+  # Requested Delivery Period
+  - {cluster: oyxla2t2d4hxnbqwhchvjcyf, to: .}
+  # Date Range Start (within Requested Delivery Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [oyxla2t2d4hxnbqwhchvjcyf], to: /RECADV/DTM~64/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: /RECADV/DTM~64/@C507.2005, transform: constant, value: '64'}]}
+  # Date Range End (within Requested Delivery Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [oyxla2t2d4hxnbqwhchvjcyf], to: /RECADV/DTM~63/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: /RECADV/DTM~63/@C507.2005, transform: constant, value: '63'}]}
+  # Delivery Quantity
+  - {component: mgt29p1un237uma77q8ay8or, to: '-', transform: omit, reason: RECADV's header has no quantity; what is received is each line's received quantity}
+  # Delivery Location
+  - {cluster: p4s8c066xzhex2ibiy6nwv4r, to: /RECADV/SG4~ST/NAD, attributes: {'3035': ST}}
+  # Delivery Location ID
+  - {component: lpixlk20bads9j3ggtte22px, to: '@C082.3039', transform: copy, also: [{to: '@C082.3055', transform: constant, value: '9'}]}
+  # Delivery Location Name
+  - {component: ude1r385xvd2002r5h851vwk, to: '@C080.3036', transform: copy}
+  # Delivery Party
+  - {cluster: j5s0gw9dabkpb7hc8r0wiu8o, to: '-', transform: omit, reason: the party delivered to is the delivery customer (NAD DP)}
+  # Received Handling Units
+  - {cluster: a4k5ljjcy08nsbzfxt05ckww, to: .}
+  # Received Handling Unit 1
+  - {cluster: nc1kwktzk7z1o8npt4tjj13r, to: ., order: 1}
+  # Received Handling Unit 2
+  - {cluster: hz4phmz4216l8o6i9s3ifrns, to: ., order: 2}
+  # Received Handling Unit 3
+  - {cluster: hw46flptbpg1wob3asqg2aqu, to: ., order: 3}
+  # Received Handling Unit 4
+  - {cluster: b9y0tpnvshh6nqqksljsjh0g, to: ., order: 4}
+  # Received Handling Unit 5
+  - {cluster: xwdc06yn86ey8yl15xj4qc39, to: ., order: 5}
+  # Received Handling Unit 6
+  - {cluster: gx3uhsgvpaleb9nnzci4oxon, to: ., order: 6}
+  # Received Handling Unit
+  - {cluster: rurja4rklziknr8co61a3rm6, to: /RECADV/SG16/CPS, attributes: {'7164': '#seq', '7166': '1'}}
+  # Transport Handling Unit ID
+  - {component: fmicvqjowc64hani966ab62m, to: ../SG20/SG21/SG23~AW/GIN/@C208.7402, transform: copy, also: [{to: ../SG20/SG21/SG23~AW/GIN/@7405, transform: constant, value: AW}]}
+  # Pallet Identification
+  - {cluster: bdmgp0sntcaygzbo5b9p1alr, to: .}
+  # Pallet ID
+  - {component: u1hc8cblrwytertipp1twfed, to: ../=SG20/=SG21/SG23~P/GIN/@C208.7402, transform: copy}
+  # Pallet ID Scheme
+  - {component: xvbh3ef9ai7wwusx3hl0uyyy, to: ../=SG20/=SG21/SG23~P/GIN/@7405, transform: code, table: {Global Returnable Asset Identifier (GS1): DB, Pool operator number: ZZZ, Shipper's number: ZZZ, Mutually agreed: ZZZ}, also: [{to: ../=SG20/=SG21/SG23~P/GIN/@C208#2.7402, transform: code, table: {Global Returnable Asset Identifier (GS1): '', Pool operator number: Pool operator number, Shipper's number: Shipper's number, Mutually agreed: Mutually agreed}}]}
+  # Date Range (within Pallet Identification)
+  - {cluster: ru9u47yxhe337pslpxm6cflx, within: [bdmgp0sntcaygzbo5b9p1alr], to: .}
+  # Date Range Start (within Pallet Identification)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [bdmgp0sntcaygzbo5b9p1alr], to: '-', transform: omit, reason: RECADV's package and handling unit groups have no date or free text}
+  # Date Range End (within Pallet Identification)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [bdmgp0sntcaygzbo5b9p1alr], to: '-', transform: omit, reason: RECADV's package and handling unit groups have no date or free text}
+  # Pack Specification Version
+  - {component: qd6oq894pmea3e6adz3cji85, to: ../SG20/SG21/RFF~ZZZ/@C506.1154, transform: copy, also: [{to: ../SG20/SG21/RFF~ZZZ/@C506.1153, transform: constant, value: ZZZ}]}
+  # Pack Specification in Force
+  - {component: vnhf5yakefk1ed25h19d3ja5, to: '-', transform: omit, reason: 'a package identification group has one reference, the version the unit was packed to'}
+  # Receiving Condition
+  - {component: xpl4g1gsbbgsqq3okyp08qb3, to: ../SG20/SG21/SG22~cond/CDI/@C564.7006, transform: copy, also: [{to: ../SG20/SG21/SG22~cond/CDI/@7001, transform: constant, value: '1'}]}
+  # Received Date (within Received Handling Unit)
+  - {component: hjwyyftryqy2wwiodxm5334r, within: [rurja4rklziknr8co61a3rm6], to: '-', transform: omit, reason: RECADV's package and handling unit groups have no date or free text}
+  # Received Time
+  - {component: mfa4wor4pwhnk7ey4ao0tapm, to: '-', transform: omit, reason: RECADV's package and handling unit groups have no date or free text}
+  # Exception Description
+  - {component: civdvmt96axod0ho162jf37u, to: '-', transform: omit, reason: RECADV's package and handling unit groups have no date or free text}
+  # Pallet ID Valid on Receipt
+  - {component: o4tzku1fyzr7n78h4p64mvnx, to: '-', transform: omit, reason: CDI states a condition by a code a partner agrees; the library names none for this check}
+  # Pack Specification Compliant
+  - {component: wrnl8gyzup8j3i8s00oh9n8y, to: '-', transform: omit, reason: CDI states a condition by a code a partner agrees; the library names none for this check}
+  # Receipt Lines
+  - {cluster: owko1lochramkejrxcv3dhqt, to: .}
+  # Receipt Line 1
+  - {cluster: u95ik4xo0qzsi4vyy6anlryc, to: ., order: 1}
+  # Receipt Line 2
+  - {cluster: fc2eu5iidz8q4xjafppu3a1q, to: ., order: 2}
+  # Receipt Line 3
+  - {cluster: ol703y7jk3or2p0ycryz2b1n, to: ., order: 3}
+  # Receipt Line 4
+  - {cluster: vg0jh463ccvs9t3v3iaq01k8, to: ., order: 4}
+  # Receipt Line 5
+  - {cluster: e090hti2p09ohheejkt1v138, to: ., order: 5}
+  # Receipt Line 6
+  - {cluster: c2811lraqg3fg9gvecnecexb, to: ., order: 6}
+  # Receipt Line 7
+  - {cluster: ri1kt3yku1jnm8eixv428qzb, to: ., order: 7}
+  # Receipt Line 8
+  - {cluster: rov72niugwipmo5qli2gmu18, to: ., order: 8}
+  # Receipt Line 9
+  - {cluster: hz4awakir9u9hlccns512ye0, to: ., order: 9}
+  # Receipt Line 10
+  - {cluster: j6wvzye0auks490asms8768h, to: ., order: 10}
+  # Receipt Line
+  - {cluster: z6a1sxbo0q8opvtuv71gvi41, to: /RECADV/=SG16~ship/SG25}
+  # Line ID
+  - {component: qnymhn26y7zfy7jav1pi3dqi, to: LIN/@1082, transform: copy}
+  # Item
+  - {cluster: g1mdkay36qkfgmtv4lvsqe4x, to: .}
+  # Item Identification
+  - {cluster: cqqaghmjayj4vo9qv1xv2ezv, to: .}
+  # Standard Item Identification
+  - {cluster: y4wy0qhkvx503a4llnzx1fg2, to: .}
+  # Item Identification Value (within Standard Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [y4wy0qhkvx503a4llnzx1fg2], to: =LIN/@C212.7140, transform: copy}
+  # Item Identification Scheme (within Standard Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [y4wy0qhkvx503a4llnzx1fg2], to: =LIN/@C212.7143, transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit, also: [{to: =LIN/@C212.1131, transform: code, table: {Catalogue item number: CAT}, on_miss: omit}]}
+  # Seller's Item Identification
+  - {cluster: q597i0tjhythg66t0hrgzuny, to: +PIA, attributes: {'4347': '1'}}
+  # Buyer's Item Identification
+  - {cluster: a80v6wq587y2fbws71tku996, to: +PIA, attributes: {'4347': '1'}}
+  # Manufacturer's Item Identification
+  - {cluster: u7d337s016i2dotve10nec4c, to: +PIA, attributes: {'4347': '1'}}
+  # Item Identification Value (within Seller's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [q597i0tjhythg66t0hrgzuny], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Seller's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [q597i0tjhythg66t0hrgzuny], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Identification Value (within Buyer's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [a80v6wq587y2fbws71tku996], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Buyer's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [a80v6wq587y2fbws71tku996], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Identification Value (within Manufacturer's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [u7d337s016i2dotve10nec4c], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Manufacturer's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [u7d337s016i2dotve10nec4c], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Extended ID
+  - {component: span8j8v0dghr4rjnit4s5uh, to: '-', transform: omit, reason: PIA and LIN carry one identifier per scheme; an extended identifier has no place}
+  # Item Name
+  - {component: iz74r6dn6ud4wqb2jsr8b82y, to: IMD~F/@C273.7008, transform: copy, also: [{to: IMD~F/@7077, transform: constant, value: F}]}
+  # Item Description
+  - {component: k0n1pwt88vd4e97alxtobizg, to: IMD~F/@C273.7008#2, transform: copy, also: [{to: IMD~F/@7077, transform: constant, value: F}]}
+  # Brand Name
+  - {component: z2hiu8mpip80cq23km4fggwr, to: '-', transform: omit, reason: the directory's item characteristic codes (7081) name no brand; a partner's guide sets one}
+  # Model Name
+  - {component: lgcfrui3pdx1rhceu488rxyy, to: '-', transform: omit, reason: the directory's item characteristic codes (7081) name no model; a partner's guide sets one}
+  # Pack Quantity
+  - {component: reydo3ozx3ie5sit1rfwsoc4, to: QTY~59/@C186.6060, transform: copy, also: [{to: QTY~59/@C186.6063, transform: constant, value: '59'}]}
+  # Pack Size
+  - {component: zf1gwuh6jx7iyy2w0aam4plx, to: '-', transform: omit, reason: the pack's contents travel as QTY 59 (Pack Quantity); a second pack figure has no qualifier}
+  # Commodity Classification
+  - {cluster: ku29eiis39dbz3td95f2x5ng, to: '-', transform: omit, reason: a commodity code goes in PIA with a code list a partner agrees; the library names none}
+  # Item Dimensions
+  - {cluster: mnrjznltm3hkmgtepxraj8ix, to: .}
+  # Length/Distance
+  - {component: vl0xhkn7z4gkgq5j2psifiil, to: MEA~LN/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~LN/@6311, transform: constant, value: AAE}, {to: MEA~LN/@C502.6313, transform: constant, value: LN}]}
+  # Weight
+  - {component: cc2p4vt57qgbdttxkngwhv93, to: MEA~AAB/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~AAB/@6311, transform: constant, value: AAE}, {to: MEA~AAB/@C502.6313, transform: constant, value: AAB}]}
+  # Volume
+  - {component: pkye7oq6g55daxxjtbiwe7uv, to: MEA~ABJ/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~ABJ/@6311, transform: constant, value: AAE}, {to: MEA~ABJ/@C502.6313, transform: constant, value: ABJ}]}
+  # Tax Category (within Item)
+  - {cluster: f3hxcmvvq1jtowruh5y3evhc, within: [g1mdkay36qkfgmtv4lvsqe4x], to: '-', transform: omit, reason: RECADV's line has no tax segment}
+  # Received Quantity
+  - {component: mtx7tf20qhgpj70qwcw37wra, to: QTY~48/@C186.6060, transform: copy, also: [{to: QTY~48/@C186.6063, transform: constant, value: '48'}], units: {to: '@C186.6411', transform: copy}}
+  # Short Quantity
+  - {component: coj0vcekjmt6bm9qdbfezhsd, to: QTY~119/@C186.6060, transform: copy, also: [{to: QTY~119/@C186.6063, transform: constant, value: '119'}], units: {to: '@C186.6411', transform: copy}}
+  # Rejected Quantity
+  - {component: kc7i8x7qkecz335q0irxsvea, to: QTY~185/@C186.6060, transform: copy, also: [{to: QTY~185/@C186.6063, transform: constant, value: '185'}], units: {to: '@C186.6411', transform: copy}}
+  # Oversupply Quantity
+  - {component: ke8102t6dh6iv8gq3yldujcd, to: QTY~121/@C186.6060, transform: copy, also: [{to: QTY~121/@C186.6063, transform: constant, value: '121'}], units: {to: '@C186.6411', transform: copy}}
+  # Received Date
+  - {component: hjwyyftryqy2wwiodxm5334r, to: DTM~50/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~50/@C507.2005, transform: constant, value: '50'}]}
+  # Note (within Receipt Line)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [z6a1sxbo0q8opvtuv71gvi41], to: FTX~AAI/@C108.4440, transform: copy, also: [{to: FTX~AAI/@4451, transform: constant, value: AAI}]}
+  # Quantity Discrepancy
+  - {component: ejt3a4ovozhda26ouj7tfjhu, to: QVR~QuantityDiscrepancy/@C960.4294, transform: copy, also: [{to: QVR~QuantityDiscrepancy/@4221, transform: code, table: {Over: AC, Mixed: CS}, on_miss: omit}, {to: QVR~QuantityDiscrepancy/@C960.4295, transform: code, table: {Short: BP, Damaged: BA}, on_miss: omit}]}
+  # Timing Complaint
+  - {component: uqzr3osgvx76j3nrg65ly58c, to: QVR~TimingComplaint/@C960.4294, transform: copy, also: [{to: QVR~TimingComplaint/@4221, transform: code, table: {Early: AI, Late: AG, Outside the appointment: AZ}, on_miss: omit}]}
+  # Timing Complaint Description
+  - {component: sjyhe5cgi4fjtq4t66oqujhg, to: FTX~AFH/@C108.4440, transform: copy, also: [{to: FTX~AFH/@4451, transform: constant, value: AFH}]}
+  # Reject Reason
+  - {component: dewtqu1tjpbdhdbaetmourqa, to: QVR~RejectReason/@C960.4294, transform: copy, also: [{to: QVR~RejectReason/@4221, transform: code, table: {Over-supplied: AC}, on_miss: omit}, {to: QVR~RejectReason/@C960.4295, transform: code, table: {Damaged: BA}, on_miss: omit}]}
+  # Reject Reason Description
+  - {component: r6y2ez3bmdm6wufxaroakjt4, to: FTX~ACD/@C108.4440, transform: copy, also: [{to: FTX~ACD/@4451, transform: constant, value: ACD}]}
+  # Reject Action
+  - {component: s132x4oetfgyn8gw8edllemq, to: FTX~REJECT/@C108.4440, transform: copy, also: [{to: FTX~REJECT/@4451, transform: constant, value: ACD}, {to: FTX~REJECT/@C107.4441, transform: constant, value: REJECT}, {to: FTX~REJECT/@C107.3055, transform: constant, value: ZZZ}]}
+  # Shortage Action
+  - {component: xi8ddq5sgyr8vu3oqzcnzr1i, to: FTX~SHORTAGE/@C108.4440, transform: copy, also: [{to: FTX~SHORTAGE/@4451, transform: constant, value: ACD}, {to: FTX~SHORTAGE/@C107.4441, transform: constant, value: SHORTAGE}, {to: FTX~SHORTAGE/@C107.3055, transform: constant, value: ZZZ}]}
+  # Order Line Reference
+  - {cluster: c3qfzlybvce95akizb8gcbtw, to: .}
+  # Line ID (within Order Line Reference)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [c3qfzlybvce95akizb8gcbtw], to: SG33~ON/RFF/@C506.1156, transform: copy, also: [{to: SG33~ON/RFF/@C506.1153, transform: constant, value: 'ON'}]}
+  # Sales Order Line ID
+  - {component: vzzejwis0nptpcqf5t5rb9sl, to: SG33~VN/RFF/@C506.1154, transform: copy, also: [{to: SG33~VN/RFF/@C506.1153, transform: constant, value: VN}]}
+  # Despatch Line Reference
+  - {cluster: l1irc9h6y2rjq65ayrg1v62o, to: .}
+  # Line ID (within Despatch Line Reference)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [l1irc9h6y2rjq65ayrg1v62o], to: SG33~AAK/RFF/@C506.1156, transform: copy, also: [{to: SG33~AAK/RFF/@C506.1153, transform: constant, value: AAK}]}
+  # Document Reference ID (within Despatch Line Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [l1irc9h6y2rjq65ayrg1v62o], to: =SG33~AAK/=RFF/@C506.1154, transform: copy}
+  # Document Reference Issue Date (within Despatch Line Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [l1irc9h6y2rjq65ayrg1v62o], to: =SG33~AAK/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: =SG33~AAK/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Line Status (within Order Line Reference)
+  - {component: sb5gat3jakjg1j6m78nq79in, within: [c3qfzlybvce95akizb8gcbtw], to: '-', transform: omit, reason: the referenced line's status is that document's; RECADV refers to the line by its number}
+  # Line Status (within Despatch Line Reference)
+  - {component: sb5gat3jakjg1j6m78nq79in, within: [l1irc9h6y2rjq65ayrg1v62o], to: '-', transform: omit, reason: the referenced line's status is that document's; RECADV refers to the line by its number}

@@ -1,0 +1,514 @@
+# Invoice (business documents library) to UN/EDIFACT D.24A INVOIC
+# Written by tools/build_mapping.py from tools/specs/invoice.py; labels in the comments.
+mapping:
+  id: invoice-edifact-d24a
+  version: 1
+  author: Axius SDC, Inc.
+  date: '2026-10-25'
+  description: 'The Invoice model''s values in a D.24A INVOIC. Declared: the library links its components to UBL, not to UN/EDIFACT.
+    The payment means code is the model''s own binding to UBL''s PaymentMeansCode, which is UNCL 4461.'
+model:
+  ct_id: u19w614300a8ot4a7qnn2o1c
+  schema_sha256: ce8568b4c08450f9f774d5f19e36eb8c927da9f11b2070766ebfbeecbd7f356d
+target:
+  name: UN/EDIFACT
+  version: D.24A
+rules:
+  # Invoice Governed Record
+  - {cluster: hw6n0jmf2nzr3ye7s76gb2fz, to: INVOIC}
+  # Invoice
+  - {cluster: nv7e4kp5ngatnxophnpn8yh0, to: .}
+  # Audit Event
+  - {cluster: t2tvd3wylxrstdeu5aw6gkw1, to: '-', transform: omit, reason: 'the record''s audit event: UN/EDIFACT has no place for it'}
+  # PROV Activity
+  - {cluster: vmikfu0irht9fmq7q02t3oqs, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Agent
+  - {cluster: c179ilk2ns15cd5rzzdfd6f6, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Entity
+  - {cluster: q0ckidtsg1x3iav6nrt8fo0l, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # Invoice Document
+  - {cluster: sfke5l7u5is9cjh5wjhozpsz, to: .}
+  # Customization ID
+  - {component: rgnvj03kjtej1s8brdeil4kq, to: '-', transform: omit, reason: a UBL customization identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile ID
+  - {component: ato2r6lpk92i9e5djcwrna74, to: '-', transform: omit, reason: a UBL profile identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile Execution ID
+  - {component: blz32vkqw11awazaklpdih7b, to: '-', transform: omit, reason: a UBL profile execution identifier; UN/EDIFACT has no element for it}
+  # Document UUID
+  - {component: wa674d96vzd8um4nwbtjrorz, to: '-', transform: omit, reason: a UBL document UUID; the message is identified by BGM's document number}
+  # Copy Indicator
+  - {component: nsv2eblxq8s0vk28ue2vh1fl, to: '-', transform: omit, reason: UN/EDIFACT's message function (BGM 1225) does not distinguish a copy from an original here}
+  # Issue Date
+  - {component: tkd16hhh9wbn0qya2ykm0552, to: DTM~137/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~137/@C507.2005, transform: constant, value: '137'}, {to: /INVOIC/=UNB/@S004.0017, transform: format, format: '%y%m%d'}]}
+  # Issue Time
+  - {component: oybfzltffyfioix1zdblxcp3, to: DTM~137/@C507.2380+, transform: format, format: '%H%M%S', also: [{to: /INVOIC/=UNB/@S004.0019, transform: format, format: '%H%M'}]}
+  # Invoice ID
+  - {component: jjrdrfy8mwl5mrhknuj91xnl, to: BGM/@C106.1004, transform: copy}
+  # Invoice Type
+  - {component: kouipkai0jddzg957p6m8a14, to: BGM/@C002.1001, transform: code, table: {Commercial invoice: '380', Corrected invoice: '384', Prepayment invoice: '386', Self-billed invoice: '389', Final invoice: '380'}}
+  # Document Status
+  - {component: mnuyvuxqsy0qskx8hiy6epff, to: '-', transform: omit, reason: 'BGM''s message function (1225) says whether the message is an original, a change or a cancellation; the record''s document status is the business document''s own'}
+  # Due Date
+  - {component: izmk5n12dei1ocsv7dms9i99, to: DTM~13/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~13/@C507.2005, transform: constant, value: '13'}]}
+  # Tax Point Date
+  - {component: wc6bib746nf7du213xlzousz, to: DTM~131/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~131/@C507.2005, transform: constant, value: '131'}]}
+  # Buyer Reference
+  - {component: yzdm2ldib2w5nqattpealocf, to: SG1~CR/RFF/@C506.1154, transform: copy, also: [{to: SG1~CR/RFF/@C506.1153, transform: constant, value: CR}]}
+  # Accounting Cost
+  - {component: jy2iyemtj9qmi8rvmzu1xw2f, to: SG1~ADE/RFF/@C506.1154, transform: copy, also: [{to: SG1~ADE/RFF/@C506.1153, transform: constant, value: ADE}]}
+  # Note
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, to: FTX~AAI/@C108.4440, transform: copy, also: [{to: FTX~AAI/@4451, transform: constant, value: AAI}]}
+  # Document Currency
+  - {component: xywkj11p7u8jhjaiim3h3gyp, to: SG7~2/CUX/@C504.6345, transform: copy, also: [{to: SG7~2/CUX/@C504.6347, transform: constant, value: '2'}]}
+  # Pricing Currency
+  - {component: a3o0vyby3nousr4jhtlsddn9, to: '-', transform: omit, reason: CUX's further currency is a target for conversion at a rate; this currency has no qualifier of its own}
+  # Tax Currency
+  - {component: ftby5cu9ote7glq4chdq7iml, to: '-', transform: omit, reason: CUX's further currency is a target for conversion at a rate; this currency has no qualifier of its own}
+  # Payment Currency
+  - {component: dke6vuqm4c79e6hlnqo9kz6k, to: '-', transform: omit, reason: CUX's further currency is a target for conversion at a rate; this currency has no qualifier of its own}
+  # Line Count
+  - {component: c1c7iydc13os47ppwwtwsnum, to: /INVOIC/CNT~2/@C270.6066, transform: copy, also: [{to: /INVOIC/CNT~2/@C270.6069, transform: constant, value: '2'}]}
+  # Invoice Period
+  - {cluster: lxcfaaj41jaqhetpy8ekmvwj, to: .}
+  # Date Range
+  - {cluster: ru9u47yxhe337pslpxm6cflx, to: .}
+  # Date Range Start (within Invoice Document > Invoice Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [sfke5l7u5is9cjh5wjhozpsz, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~263/@C507.2005, transform: constant, value: '263'}, {to: DTM~263/@C507.2379, transform: constant, value: '718'}]}
+  # Date Range End (within Invoice Document > Invoice Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [sfke5l7u5is9cjh5wjhozpsz, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380+, transform: format, format: -%Y%m%d}
+  # Order Reference
+  - {cluster: zj2hjn6wx3dfa0h5vlzeexhw, to: .}
+  # Order ID
+  - {component: wtnd4hzyrntlwtp4z3l1gcpr, to: SG1~ON/RFF/@C506.1154, transform: copy, also: [{to: SG1~ON/RFF/@C506.1153, transform: constant, value: 'ON'}]}
+  # Issue Date (within Order Reference)
+  - {component: tkd16hhh9wbn0qya2ykm0552, within: [zj2hjn6wx3dfa0h5vlzeexhw], to: SG1~ON/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~ON/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Sales Order ID
+  - {component: mllhwxhu0zvxhwt32em2t821, to: SG1~VN/RFF/@C506.1154, transform: copy, also: [{to: SG1~VN/RFF/@C506.1153, transform: constant, value: VN}]}
+  # Order Type
+  - {component: q9k20amngqerxvhpvhwn9t3q, to: '-', transform: omit, reason: INVOIC refers to the order by its number (RFF ON); the order's type is the order's}
+  # Billing Reference
+  - {cluster: c9trmbywa8czks1lo7tl6wf4, to: .}
+  # Invoice Document Reference
+  - {cluster: nfzgoofnuo7i47mo0pv6180n, to: .}
+  # Despatch Document Reference
+  - {cluster: ulo971f5gnqane7k9pd5iog3, to: .}
+  # Receipt Document Reference
+  - {cluster: qhpvwltqz9t7ruv372qp7u5o, to: .}
+  # Originator Document Reference
+  - {cluster: fzqzhzcv7z3plh5c3n90m4e9, to: .}
+  # Additional Document Reference
+  - {cluster: m1cppki3rm9et0bhz1lej8l7, to: .}
+  # Document Reference
+  - {cluster: ouhl662e9dzv99ng02kotdsx, to: .}
+  # Document Reference
+  - {cluster: uk03ahua6zv9d0i5tqq5qzmh, to: .}
+  # Document Reference ID (within Invoice Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [nfzgoofnuo7i47mo0pv6180n], to: SG1~IV/RFF/@C506.1154, transform: copy, also: [{to: SG1~IV/RFF/@C506.1153, transform: constant, value: IV}]}
+  # Document Reference Issue Date (within Invoice Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [nfzgoofnuo7i47mo0pv6180n], to: SG1~IV/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~IV/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Reference ID (within Despatch Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [ulo971f5gnqane7k9pd5iog3], to: SG1~AAK/RFF/@C506.1154, transform: copy, also: [{to: SG1~AAK/RFF/@C506.1153, transform: constant, value: AAK}]}
+  # Document Reference Issue Date (within Despatch Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [ulo971f5gnqane7k9pd5iog3], to: SG1~AAK/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~AAK/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Reference ID (within Receipt Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [qhpvwltqz9t7ruv372qp7u5o], to: SG1~ALO/RFF/@C506.1154, transform: copy, also: [{to: SG1~ALO/RFF/@C506.1153, transform: constant, value: ALO}]}
+  # Document Reference Issue Date (within Receipt Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [qhpvwltqz9t7ruv372qp7u5o], to: SG1~ALO/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~ALO/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Reference ID (within Originator Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [fzqzhzcv7z3plh5c3n90m4e9], to: SG1~ABO/RFF/@C506.1154, transform: copy, also: [{to: SG1~ABO/RFF/@C506.1153, transform: constant, value: ABO}]}
+  # Document Reference Issue Date (within Originator Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [fzqzhzcv7z3plh5c3n90m4e9], to: SG1~ABO/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~ABO/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Reference ID (within Additional Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [m1cppki3rm9et0bhz1lej8l7], to: SG1~ACD/RFF/@C506.1154, transform: copy, also: [{to: SG1~ACD/RFF/@C506.1153, transform: constant, value: ACD}]}
+  # Document Reference Issue Date (within Additional Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [m1cppki3rm9et0bhz1lej8l7], to: SG1~ACD/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~ACD/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Document Type
+  - {component: arra8d8x6kv6l5mluiomye3t, to: '-', transform: omit, reason: 'a reference group carries a reference number and its date, not the document''s type'}
+  # Document Type
+  - {component: hyw1higymybzar9tv2ze77xa, to: '-', transform: omit, reason: 'a reference group carries a reference number and its date, not the document''s type'}
+  # Document Description
+  - {component: z181ta9jftxc7k63rv4nz1zv, to: '-', transform: omit, reason: 'a reference group carries a reference number and its date, not a description'}
+  # Contract
+  - {cluster: t2n35sdg0xy8ria7ixcb464z, to: .}
+  # Contract ID
+  - {component: ksr1tl7okjcyf18nprakncw7, to: SG1~CT/RFF/@C506.1154, transform: copy, also: [{to: SG1~CT/RFF/@C506.1153, transform: constant, value: CT}]}
+  # Contract Issue Date
+  - {component: nvna1bzcdyspz7k40coxn5y7, to: SG1~CT/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG1~CT/DTM/@C507.2005, transform: constant, value: '126'}]}
+  # Contract Type
+  - {component: r4yktyzzaxury9xsfdw788tj, to: '-', transform: omit, reason: 'a reference group carries a contract''s number and its date, not its type'}
+  # Accounting Supplier Party
+  - {cluster: f3duci830odmou614vn1rpgu, to: /INVOIC/SG2/NAD, attributes: {'3035': II}}
+  # Accounting Customer Party
+  - {cluster: iswfl2vzv0f9ctm5rjxa3ums, to: /INVOIC/SG2/NAD, attributes: {'3035': IV}}
+  # Buyer Customer Party
+  - {cluster: nylve3b8ss572vh8zso2u4l7, to: /INVOIC/SG2/NAD, attributes: {'3035': BY}}
+  # Seller Supplier Party
+  - {cluster: xkkk5vyegpy4xdig8vnabstc, to: /INVOIC/SG2/NAD, attributes: {'3035': SE}}
+  # Payee Party
+  - {cluster: anpufgp9b2pqetblqffkfggy, to: /INVOIC/SG2/NAD, attributes: {'3035': PE}}
+  # Party Identification Value
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, to: '@C082.3039', transform: copy}
+  # Party Identification Value (within Accounting Supplier Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [f3duci830odmou614vn1rpgu], to: '@C082.3039', transform: copy, also: [{to: /INVOIC/=UNB/@S002.0004, transform: copy}, {to: /INVOIC/=UNB/@S002.0007, transform: constant, value: '14'}]}
+  # Party Identification Value (within Accounting Customer Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [iswfl2vzv0f9ctm5rjxa3ums], to: '@C082.3039', transform: copy, also: [{to: /INVOIC/=UNB/@S003.0010, transform: copy}, {to: /INVOIC/=UNB/@S003.0007, transform: constant, value: '14'}]}
+  # Supplier Party
+  - {cluster: utcj07ovkb7ntkbq8ix0ro4l, to: .}
+  # Customer Party
+  - {cluster: asbbdn0eof6713wx4y2e90c2, to: .}
+  # Party
+  - {cluster: useph7s4ienfhwerqx2thedj, to: .}
+  # Party Identification
+  - {cluster: z0gdpy67iot29gdc2zq2v1jj, to: .}
+  # Party Legal Entity
+  - {cluster: cslzdtawth1xxjjslf1975qt, to: .}
+  # US Address
+  - {cluster: jqgvof35d7y83wkfcgiic5em, to: .}
+  # International Address
+  - {cluster: upawqojmcfg3qsf4ffzi47ho, to: .}
+  # Party Identification Scheme
+  - {component: c9v9nkkg6b8sixoaf55vyjrn, to: '@C082.3055', transform: code, table: {Global Location Number (GS1): '9', DUNS number: '16', Assigned by the buyer: '92', Assigned by the seller: '91', Tax identifier: ZZZ, Company registration number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit, also: [{to: '@C082.1131', transform: code, table: {Tax identifier: TAX, Company registration number: CRN}, on_miss: omit}]}
+  # Organization Name
+  - {component: xcn8r67fg7soty17homzok44, to: '@C080.3036', transform: copy}
+  # Registration Name
+  - {component: ev7lhh4t59tt8ot0tfoaztb6, to: '@C080.3036#2', transform: copy}
+  # Company ID
+  - {component: axizk9c3k82w84p1t1wkwayu, to: ../SG3~XA/RFF/@C506.1154, transform: copy, also: [{to: ../SG3~XA/RFF/@C506.1153, transform: constant, value: XA}]}
+  # Customer Assigned Account ID
+  - {component: ybdlctks32zkkteycr5y1eq8, to: ../SG3~IA/RFF/@C506.1154, transform: copy, also: [{to: ../SG3~IA/RFF/@C506.1153, transform: constant, value: IA}]}
+  # Supplier Assigned Account ID
+  - {component: nhvx21mf5ac81670xyrpwbaz, to: ../SG3~IT/RFF/@C506.1154, transform: copy, also: [{to: ../SG3~IT/RFF/@C506.1153, transform: constant, value: IT}]}
+  # Address (Line 1)
+  - {component: ncxxt7wgs7soxw7kbmapxvg3, to: '@C059.3042', transform: copy}
+  # Address (Line 2)
+  - {component: sexw93x5276zwsn1qx15htpv, to: '@C059.3042#2', transform: copy}
+  # City Name
+  - {component: toysvef93azt57fgh8rwpd4b, to: '@3164', transform: copy}
+  # US State Code
+  - {component: k9tqm489kilg33mx4cibyto6, to: '@C819.3229', transform: copy}
+  # Region Name
+  - {component: jw1b9q6ulyte599sdsqp2mvp, to: '@C819.3228', transform: copy}
+  # US ZIP Code
+  - {component: cjzq0xnrm0uu8p1h51koheoz, to: '@3251', transform: copy}
+  # Postal Code
+  - {component: gf841eedvv6cjiegs934srai, to: '@3251', transform: copy}
+  # Country Code ISO 3166
+  - {component: f2jicaigehz7xmwcp1gm5gh0, to: '@3207', transform: copy}
+  # Party Contact
+  - {cluster: kibeh8vp79shumcdyj8xzqw1, to: ../SG5/CTA, attributes: {'3139': IC}}
+  # Contact Point
+  - {cluster: d2xwhnb2vqzxw70jcizj9csx, to: .}
+  # Contact Name
+  - {component: fp533gyfb6yatp6jgpg2emb2, to: '@C056.3412', transform: copy}
+  # Phone Number
+  - {component: zpfwg52r88j6jdypj7rg71ke, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: TE}]}
+  # Fax Number
+  - {component: ll6ltsnvakomixuitxkbkxfz, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: FX}]}
+  # Email Address
+  - {component: q922mqaon3yn5zlwf2bszf28, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: EM}]}
+  # Website URL
+  - {component: wriny2gz8aqcvffmfpwbompk, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: AH}]}
+  # Endpoint ID
+  - {component: fpb149j9um0l676icmhyp56d, to: '-', transform: omit, reason: the party's identification in NAD is its address for interchange; NAD has no separate endpoint}
+  # Contact Department
+  - {component: bkw6awwe7kp01kowlwbgn21b, to: '-', transform: omit, reason: 'CTA''s contact identifier (3413) is a code of at most 17 characters, not a department''s name'}
+  # Contact Job Title
+  - {component: ozkpv9buivm77ozkybm0ww39, to: '-', transform: omit, reason: CTA has no element for a job title}
+  # Contact Method
+  - {component: miqo30r5b554nyj7ubryw43x, to: '-', transform: omit, reason: COM's channel (3155) is set by the number written; there is no preferred method}
+  # Contact Use
+  - {component: vmruk4j9y1orvvz8cwafrax5, to: '-', transform: omit, reason: COM has no element for the use of a contact point}
+  # Address Use
+  - {component: b25dj42zxhm19pih328ga8pl, to: '-', transform: omit, reason: NAD has no element for the use of an address}
+  # Tax Representative Party
+  - {cluster: fmybhv0a3jnnca8z2z73yuoq, to: '-', transform: omit, reason: the directory's party function codes (3035) have no tax representative}
+  # Delivery
+  - {cluster: sy3rqkwaui6b7gfjbqxb15wt, to: .}
+  # Delivery ID
+  - {component: xxnvc50tm2l6hqejitd5lalh, to: SG1~AAJ/RFF/@C506.1154, transform: copy, also: [{to: SG1~AAJ/RFF/@C506.1153, transform: constant, value: AAJ}]}
+  # Latest Delivery Date
+  - {component: z180eu0o81qv2cfgjejo5unw, to: DTM~17/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~17/@C507.2005, transform: constant, value: '17'}]}
+  # Requested Delivery Period
+  - {cluster: oyxla2t2d4hxnbqwhchvjcyf, to: .}
+  # Date Range Start (within Invoice > Delivery > Requested Delivery Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [nv7e4kp5ngatnxophnpn8yh0, sy3rqkwaui6b7gfjbqxb15wt, oyxla2t2d4hxnbqwhchvjcyf], to: DTM~64/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~64/@C507.2005, transform: constant, value: '64'}]}
+  # Date Range End (within Invoice > Delivery > Requested Delivery Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [nv7e4kp5ngatnxophnpn8yh0, sy3rqkwaui6b7gfjbqxb15wt, oyxla2t2d4hxnbqwhchvjcyf], to: DTM~63/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~63/@C507.2005, transform: constant, value: '63'}]}
+  # Delivery Quantity
+  - {component: mgt29p1un237uma77q8ay8or, to: '-', transform: omit, reason: INVOIC's header has no quantity; what is invoiced is each line's quantity}
+  # Delivery Location
+  - {cluster: p4s8c066xzhex2ibiy6nwv4r, to: /INVOIC/SG2~ST/NAD, attributes: {'3035': ST}}
+  # Delivery Location ID
+  - {component: lpixlk20bads9j3ggtte22px, to: '@C082.3039', transform: copy, also: [{to: '@C082.3055', transform: constant, value: '9'}]}
+  # Delivery Location Name
+  - {component: ude1r385xvd2002r5h851vwk, to: '@C080.3036', transform: copy}
+  # Delivery Party
+  - {cluster: j5s0gw9dabkpb7hc8r0wiu8o, to: '-', transform: omit, reason: the party delivered to is named by the delivery location (NAD ST)}
+  # Delivery Terms
+  - {cluster: u9i76tpl2wkhlbncvcayuo1r, to: SG12/TOD, attributes: {'4055': '6', C100.1131: Incoterms 2020, C100.3055: ZZZ}}
+  # Delivery Terms Code
+  - {component: w8xglen3ypxximnzzjzsvm5u, to: '@C100.4052', transform: copy}
+  # Delivery Special Terms
+  - {component: pfag6soto6wul7frsg8bt8rv, to: ../../FTX~AAR/@C108.4440, transform: copy, also: [{to: ../../FTX~AAR/@4451, transform: constant, value: AAR}]}
+  # Delivery Location (within Delivery Terms)
+  - {cluster: p4s8c066xzhex2ibiy6nwv4r, within: [u9i76tpl2wkhlbncvcayuo1r], to: ../LOC~1, attributes: {'3227': '1'}}
+  # Delivery Location ID (within Delivery Terms)
+  - {component: lpixlk20bads9j3ggtte22px, within: [u9i76tpl2wkhlbncvcayuo1r], to: '@C517.3225', transform: copy}
+  # Delivery Location Name (within Delivery Terms)
+  - {component: ude1r385xvd2002r5h851vwk, within: [u9i76tpl2wkhlbncvcayuo1r], to: '@C517.3224', transform: copy}
+  # US Address (within Delivery Terms > Delivery Location)
+  - {cluster: jqgvof35d7y83wkfcgiic5em, within: [u9i76tpl2wkhlbncvcayuo1r, p4s8c066xzhex2ibiy6nwv4r], to: '-', transform: omit, reason: LOC names a place by its identifier and name; the terms' place has no address}
+  # International Address (within Delivery Terms > Delivery Location)
+  - {cluster: upawqojmcfg3qsf4ffzi47ho, within: [u9i76tpl2wkhlbncvcayuo1r, p4s8c066xzhex2ibiy6nwv4r], to: '-', transform: omit, reason: LOC names a place by its identifier and name; the terms' place has no address}
+  # Payment Means Instruction
+  - {cluster: pnpbq6767i7i05afp648yhdd, to: .}
+  # Payment Means
+  - {component: pv15bnowaxjtczx4wx4vit4d, to: PAI/@C534.4461, transform: binding, prefix: 'http://docs.oasis-open.org/ubl/os-UBL-2.3/cl/gc/default/PaymentMeansCode-2.3.gc', on_miss: omit}
+  # Payment Due Date (within Payment Means Instruction)
+  - {component: iw79shpxfxnmiueutlhubpr2, within: [pnpbq6767i7i05afp648yhdd], to: DTM~140/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~140/@C507.2005, transform: constant, value: '140'}]}
+  # Note (within Payment Means Instruction)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [pnpbq6767i7i05afp648yhdd], to: FTX~PMD/@C108.4440, transform: copy, also: [{to: FTX~PMD/@4451, transform: constant, value: PMD}]}
+  # Payment Terms
+  - {cluster: jje6lh4symzgvm04292t44o2, to: SG8/PYT, attributes: {'4279': '1'}}
+  # Payment Terms ID
+  - {component: q439xnetx63djdu56tw5e0jm, to: '@C019.4277', transform: copy}
+  # Note (within Payment Terms)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [jje6lh4symzgvm04292t44o2], to: '@C019.4276', transform: copy}
+  # Settlement Discount Percent
+  - {component: ng30ck36wgei6bmx79qxy3xm, to: ../PCD~12/@C501.5482, transform: copy, also: [{to: ../PCD~12/@C501.5245, transform: constant, value: '12'}]}
+  # Penalty Surcharge Percent
+  - {component: erekzvcx8ierm1tneaiuv109, to: ../PCD~15/@C501.5482, transform: copy, also: [{to: ../PCD~15/@C501.5245, transform: constant, value: '15'}]}
+  # Payment Due Date (within Payment Terms)
+  - {component: iw79shpxfxnmiueutlhubpr2, within: [jje6lh4symzgvm04292t44o2], to: ../DTM~140/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: ../DTM~140/@C507.2005, transform: constant, value: '140'}]}
+  # Settlement Period
+  - {cluster: e01bi01ugxeef1gqc5litkki, to: .}
+  # Date Range Start (within Settlement Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [e01bi01ugxeef1gqc5litkki], to: ../DTM~7/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: ../DTM~7/@C507.2005, transform: constant, value: '7'}]}
+  # Date Range End (within Settlement Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [e01bi01ugxeef1gqc5litkki], to: ../DTM~12/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: ../DTM~12/@C507.2005, transform: constant, value: '12'}]}
+  # Prepaid Payment
+  - {cluster: iu17zkxwfjniilyvra9l9wab, to: .}
+  # Payment ID
+  - {component: v3i83gyo86gjvtbfrh7ymmws, to: SG1~PQ/RFF/@C506.1154, transform: copy, also: [{to: SG1~PQ/RFF/@C506.1153, transform: constant, value: PQ}]}
+  # Payment Instruction ID
+  - {component: r6l26jfybtdxgga27tv2m2te, to: SG1~AEK/RFF/@C506.1154, transform: copy, also: [{to: SG1~AEK/RFF/@C506.1153, transform: constant, value: AEK}]}
+  # Paid Amount
+  - {component: q0md6d93ohs1zq8fo5wgk18w, to: /INVOIC/SG52~11/MOA~11/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~11/MOA~11/@C516.5025, transform: constant, value: '11'}]}
+  # Payment Received Date
+  - {component: bb1o4913u853s9hyas8bc7e8, to: DTM~193/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~193/@C507.2005, transform: constant, value: '193'}]}
+  # Paid Date
+  - {component: trjwclbvv3tfkhwdhi7hya41, to: DTM~209/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~209/@C507.2005, transform: constant, value: '209'}]}
+  # Allowance Charge
+  - {cluster: gp9qg9erknbjn0quld92syla, to: SG16/ALC}
+  # Charge Indicator
+  - {component: wf9pzmcdm06vu2l3usnfkdp0, to: '@5463', transform: code, table: {'true': C, 'false': A}}
+  # Allowance Charge Reason
+  - {component: dmk3uu59n8dpdso1vw6jhif5, to: '@C214.7160', transform: copy}
+  # Allowance Charge Reason Text
+  - {component: n3v2ahdss6egqpmdmgd77de8, to: '@C214.7160#2', transform: copy}
+  # Allowance Charge Amount
+  - {component: mlog5q5v5rmcnry4n07m63m6, to: ../SG20~8/MOA~8/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../SG20~8/MOA~8/@C516.5025, transform: constant, value: '8'}]}
+  # Base Amount
+  - {component: qosequlh47qfvr6d5nzn9gh8, to: ../SG20~25/MOA~25/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../SG20~25/MOA~25/@C516.5025, transform: constant, value: '25'}]}
+  # Multiplier Factor
+  - {component: ak6fih808akzuax3o6btb8lz, to: '-', transform: omit, reason: 'ALC''s groups carry a quantity, a percentage, an amount or a rate; a multiplier factor is none of them'}
+  # Tax Total
+  - {cluster: yat9nppabvpq1jrgpsi5g226, to: .}
+  # Tax Amount
+  - {component: gi49b158luigt4x2bhhbnux0, to: /INVOIC/SG52~176/MOA~176/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~176/MOA~176/@C516.5025, transform: constant, value: '176'}]}
+  # Tax Subtotal
+  - {cluster: w4pmewp5mgp43q2k0p4bmyfw, to: SG6/TAX, attributes: {'5283': '7'}}
+  # Tax Amount (within Tax Subtotal)
+  - {component: gi49b158luigt4x2bhhbnux0, within: [w4pmewp5mgp43q2k0p4bmyfw], to: ../MOA~124/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../MOA~124/@C516.5025, transform: constant, value: '124'}]}
+  # Taxable Amount (within Tax Subtotal)
+  - {component: cx5gdd7pofanddbh9yaf53xl, within: [w4pmewp5mgp43q2k0p4bmyfw], to: '-', transform: omit, reason: 'a tax group holds one amount, the tax; the document''s taxable base is its tax exclusive amount (MOA 125)'}
+  # Tax Category
+  - {cluster: f3hxcmvvq1jtowruh5y3evhc, to: .}
+  # Tax Category ID
+  - {component: p6c7q343dafqwvcq6m1ffz5i, to: '@5305', transform: copy}
+  # Tax Percent
+  - {component: v4zn5xtqlkni8qr3ly7e2j1a, to: '@C243.5278', transform: copy}
+  # Tax Category Name
+  - {component: ehh24wvyu4fsa3rbeheft3kj, to: '-', transform: omit, reason: TAX identifies a category by its code (5305); it has no element for a name}
+  # Tax Scheme
+  - {cluster: u23p2mgw0aw90lu5eh3o2ix0, to: .}
+  # Tax Scheme Name
+  - {component: g7952fbwz8uh2ig9uidu9877, to: '@C241.5152', transform: copy}
+  # Tax Scheme ID
+  - {component: mexx9mfi4rglmgi71nqf37ux, to: '-', transform: omit, reason: TAX types a tax by the directory's code (5153) and names it (5152); a jurisdiction's own scheme identifier has no element}
+  # Tax Category (within Item)
+  - {cluster: f3hxcmvvq1jtowruh5y3evhc, within: [g1mdkay36qkfgmtv4lvsqe4x], to: SG35/TAX, attributes: {'5283': '7'}}
+  # Withholding Tax Total
+  - {cluster: vbhwnih68qljrm0xff5cm6b5, to: '-', transform: omit, reason: TAX's function qualifier (5283) has no code for a tax withheld from the payment}
+  # Legal Monetary Total
+  - {cluster: aqajprszm8ykn1u919442rpw, to: .}
+  # Line Extension Total Amount
+  - {component: zoqvpnsbbfcs2ma5ah6srf27, to: /INVOIC/SG52~79/MOA~79/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~79/MOA~79/@C516.5025, transform: constant, value: '79'}]}
+  # Tax Exclusive Amount
+  - {component: fddz3gxz8pjvgxmymmma54jp, to: /INVOIC/SG52~125/MOA~125/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~125/MOA~125/@C516.5025, transform: constant, value: '125'}]}
+  # Tax Inclusive Amount
+  - {component: oqk5mad2efz8sg444h8pis0e, to: /INVOIC/SG52~128/MOA~128/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~128/MOA~128/@C516.5025, transform: constant, value: '128'}]}
+  # Allowance Total Amount
+  - {component: imolx6ui92t4lv1ise4tue7b, to: /INVOIC/SG52~260/MOA~260/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~260/MOA~260/@C516.5025, transform: constant, value: '260'}]}
+  # Charge Total Amount
+  - {component: akme82vh7v2fvgnrht228b5h, to: /INVOIC/SG52~131/MOA~131/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~131/MOA~131/@C516.5025, transform: constant, value: '131'}]}
+  # Prepaid Amount
+  - {component: oeoory19276gd0hy5m521d8p, to: /INVOIC/SG52~113/MOA~113/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~113/MOA~113/@C516.5025, transform: constant, value: '113'}]}
+  # Payable Rounding Amount
+  - {component: dj7znans3l4hdl28mux0vc5s, to: /INVOIC/SG52~165/MOA~165/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~165/MOA~165/@C516.5025, transform: constant, value: '165'}]}
+  # Payable Amount
+  - {component: axifzu4nt8m8n4qpfn838yy8, to: /INVOIC/SG52~9/MOA~9/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /INVOIC/SG52~9/MOA~9/@C516.5025, transform: constant, value: '9'}]}
+  # Invoice Lines
+  - {cluster: lqvti95foq5nmpgg4us5d08m, to: .}
+  # Invoice Line 1
+  - {cluster: pvcuumel6sn0d3ntyl3dw55d, to: ., order: 1}
+  # Invoice Line 2
+  - {cluster: t8vxds2ocgtdxk5zge6cjyxe, to: ., order: 2}
+  # Invoice Line 3
+  - {cluster: tt7vd3wbb6qyuuk5nz9mvrk1, to: ., order: 3}
+  # Invoice Line 4
+  - {cluster: at84f347n2tcv55ol06wyfie, to: ., order: 4}
+  # Invoice Line 5
+  - {cluster: t979wv49kipa8tomo99iaf8d, to: ., order: 5}
+  # Invoice Line 6
+  - {cluster: pw8ybnc02e8cn5dgr9sdxpql, to: ., order: 6}
+  # Invoice Line 7
+  - {cluster: rl99muluptuf28lebfwsxp9z, to: ., order: 7}
+  # Invoice Line 8
+  - {cluster: fjbpcliwnk6155ds2ggqjgue, to: ., order: 8}
+  # Invoice Line 9
+  - {cluster: akk5ncts3xazjdhdb9rk5j4p, to: ., order: 9}
+  # Invoice Line 10
+  - {cluster: lbju0lph5trgm5z9wkru9q1l, to: ., order: 10}
+  # Invoice Line
+  - {cluster: sg30zpa8nw143kctvpulzo0a, to: /INVOIC/SG27}
+  # Line ID
+  - {component: qnymhn26y7zfy7jav1pi3dqi, to: LIN/@1082, transform: copy}
+  # Item
+  - {cluster: g1mdkay36qkfgmtv4lvsqe4x, to: .}
+  # Item Identification
+  - {cluster: cqqaghmjayj4vo9qv1xv2ezv, to: .}
+  # Standard Item Identification
+  - {cluster: y4wy0qhkvx503a4llnzx1fg2, to: .}
+  # Item Identification Value (within Standard Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [y4wy0qhkvx503a4llnzx1fg2], to: =LIN/@C212.7140, transform: copy}
+  # Item Identification Scheme (within Standard Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [y4wy0qhkvx503a4llnzx1fg2], to: =LIN/@C212.7143, transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit, also: [{to: =LIN/@C212.1131, transform: code, table: {Catalogue item number: CAT}, on_miss: omit}]}
+  # Seller's Item Identification
+  - {cluster: q597i0tjhythg66t0hrgzuny, to: +PIA, attributes: {'4347': '1'}}
+  # Buyer's Item Identification
+  - {cluster: a80v6wq587y2fbws71tku996, to: +PIA, attributes: {'4347': '1'}}
+  # Manufacturer's Item Identification
+  - {cluster: u7d337s016i2dotve10nec4c, to: +PIA, attributes: {'4347': '1'}}
+  # Item Identification Value (within Seller's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [q597i0tjhythg66t0hrgzuny], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Seller's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [q597i0tjhythg66t0hrgzuny], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Identification Value (within Buyer's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [a80v6wq587y2fbws71tku996], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Buyer's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [a80v6wq587y2fbws71tku996], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Identification Value (within Manufacturer's Item Identification)
+  - {component: db1bt3xlh3m1jpvnmesx480v, within: [u7d337s016i2dotve10nec4c], to: '@C212.7140', transform: copy}
+  # Item Identification Scheme (within Manufacturer's Item Identification)
+  - {component: k84kh4trdynaoi242c268lat, within: [u7d337s016i2dotve10nec4c], to: '@C212.7143', transform: code, table: {Global Trade Item Number (GS1): SRV, Seller's item number: SA, Buyer's item number: IN, Manufacturer's item number: MF, Catalogue item number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit}
+  # Item Extended ID
+  - {component: span8j8v0dghr4rjnit4s5uh, to: '-', transform: omit, reason: PIA and LIN carry one identifier per scheme; an extended identifier has no place}
+  # Item Name
+  - {component: iz74r6dn6ud4wqb2jsr8b82y, to: IMD~F/@C273.7008, transform: copy, also: [{to: IMD~F/@7077, transform: constant, value: F}]}
+  # Item Description
+  - {component: k0n1pwt88vd4e97alxtobizg, to: IMD~F/@C273.7008#2, transform: copy, also: [{to: IMD~F/@7077, transform: constant, value: F}]}
+  # Brand Name
+  - {component: z2hiu8mpip80cq23km4fggwr, to: '-', transform: omit, reason: the directory's item characteristic codes (7081) name no brand; a partner's guide sets one}
+  # Model Name
+  - {component: lgcfrui3pdx1rhceu488rxyy, to: '-', transform: omit, reason: the directory's item characteristic codes (7081) name no model; a partner's guide sets one}
+  # Pack Quantity
+  - {component: reydo3ozx3ie5sit1rfwsoc4, to: QTY~59/@C186.6060, transform: copy, also: [{to: QTY~59/@C186.6063, transform: constant, value: '59'}]}
+  # Pack Size
+  - {component: zf1gwuh6jx7iyy2w0aam4plx, to: '-', transform: omit, reason: the pack's contents travel as QTY 59 (Pack Quantity); a second pack figure has no qualifier}
+  # Commodity Classification
+  - {cluster: ku29eiis39dbz3td95f2x5ng, to: '-', transform: omit, reason: a commodity code goes in PIA with a code list a partner agrees; the library names none}
+  # Item Dimensions
+  - {cluster: mnrjznltm3hkmgtepxraj8ix, to: .}
+  # Length/Distance
+  - {component: vl0xhkn7z4gkgq5j2psifiil, to: MEA~LN/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~LN/@6311, transform: constant, value: AAE}, {to: MEA~LN/@C502.6313, transform: constant, value: LN}]}
+  # Weight
+  - {component: cc2p4vt57qgbdttxkngwhv93, to: MEA~AAB/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~AAB/@6311, transform: constant, value: AAE}, {to: MEA~AAB/@C502.6313, transform: constant, value: AAB}]}
+  # Volume
+  - {component: pkye7oq6g55daxxjtbiwe7uv, to: MEA~ABJ/@C174.6314, transform: copy, units: {to: '@C174.6411', transform: code, table: {mm: MMT, cm: CMT, m: MTR, km: KMT, mg: MGM, g: GRM, kg: KGM, mL: MLT, L: LTR, °C: CEL, K: KEL}}, also: [{to: MEA~ABJ/@6311, transform: constant, value: AAE}, {to: MEA~ABJ/@C502.6313, transform: constant, value: ABJ}]}
+  # Invoiced Quantity
+  - {component: s9krftme8psf952d6lop4h2r, to: QTY~47/@C186.6060, transform: copy, also: [{to: QTY~47/@C186.6063, transform: constant, value: '47'}], units: {to: '@C186.6411', transform: copy}}
+  # Line Extension Amount
+  - {component: q2fgdapi4r5d406rbiuuwomp, to: SG28~203/MOA~203/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: SG28~203/MOA~203/@C516.5025, transform: constant, value: '203'}]}
+  # Tax Inclusive Line Extension Amount
+  - {component: dzsmbbloyp19dbgy6j1maz1q, to: '-', transform: omit, reason: 'a line''s amounts are qualified by 5025, which has no line amount including tax'}
+  # Tax Point Date (within Invoice Line)
+  - {component: wc6bib746nf7du213xlzousz, within: [sg30zpa8nw143kctvpulzo0a], to: DTM~131/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~131/@C507.2005, transform: constant, value: '131'}]}
+  # Accounting Cost (within Invoice Line)
+  - {component: jy2iyemtj9qmi8rvmzu1xw2f, within: [sg30zpa8nw143kctvpulzo0a], to: SG31~ADE/RFF/@C506.1154, transform: copy, also: [{to: SG31~ADE/RFF/@C506.1153, transform: constant, value: ADE}]}
+  # Free of Charge
+  - {component: ko11zu0n8anavb1ovyib9xyf, to: '-', transform: omit, reason: 'INVOIC states free goods as a quantity (QTY 192), not as a flag on the line'}
+  # Note (within Invoice Line)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [sg30zpa8nw143kctvpulzo0a], to: FTX~AAI/@C108.4440, transform: copy, also: [{to: FTX~AAI/@4451, transform: constant, value: AAI}]}
+  # Date Range Start (within Invoice Line > Invoice Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [sg30zpa8nw143kctvpulzo0a, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~263/@C507.2005, transform: constant, value: '263'}, {to: DTM~263/@C507.2379, transform: constant, value: '718'}]}
+  # Date Range End (within Invoice Line > Invoice Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [sg30zpa8nw143kctvpulzo0a, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380+, transform: format, format: -%Y%m%d}
+  # Price
+  - {cluster: cfyo90kf2i12yi4q6tfz096p, to: SG30/PRI, attributes: {C509.5125: AAA}}
+  # Price Amount
+  - {component: xmhraye8g23oss82ihfmwjkd, to: '@C509.5118', transform: copy}
+  # Base Quantity
+  - {component: ivmsm0wfok9g4chzb0gryzqy, to: '@C509.5284', transform: copy, units: {to: '@C509.6411', transform: copy}}
+  # Price Type
+  - {component: n2bk18wxzh5oggb19qgrbo3t, to: '@C509.5375', transform: code, table: {Contract price: CT, Catalogue price: CA, List price: PC}, on_miss: omit}
+  # Price Validity Period
+  - {cluster: nf09mmhkifwsik543zulj8b0, to: .}
+  # Date Range Start (within Price Validity Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [nf09mmhkifwsik543zulj8b0], to: ../DTM~157/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: ../DTM~157/@C507.2005, transform: constant, value: '157'}]}
+  # Date Range End (within Price Validity Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [nf09mmhkifwsik543zulj8b0], to: ../DTM~799/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: ../DTM~799/@C507.2005, transform: constant, value: '799'}]}
+  # Tax Subtotal (within Invoice Line)
+  - {cluster: w4pmewp5mgp43q2k0p4bmyfw, within: [sg30zpa8nw143kctvpulzo0a], to: SG35/TAX, attributes: {'5283': '7'}}
+  # Tax Amount (within Invoice Line > Tax Total)
+  - {component: gi49b158luigt4x2bhhbnux0, within: [sg30zpa8nw143kctvpulzo0a, yat9nppabvpq1jrgpsi5g226], to: SG28~124/MOA~124/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: SG28~124/MOA~124/@C516.5025, transform: constant, value: '124'}]}
+  # Tax Amount (within Invoice Line > Tax Total > Tax Subtotal)
+  - {component: gi49b158luigt4x2bhhbnux0, within: [sg30zpa8nw143kctvpulzo0a, yat9nppabvpq1jrgpsi5g226, w4pmewp5mgp43q2k0p4bmyfw], to: ../MOA~124/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../MOA~124/@C516.5025, transform: constant, value: '124'}]}
+  # Taxable Amount (within Invoice Line > Tax Total > Tax Subtotal)
+  - {component: cx5gdd7pofanddbh9yaf53xl, within: [sg30zpa8nw143kctvpulzo0a, yat9nppabvpq1jrgpsi5g226, w4pmewp5mgp43q2k0p4bmyfw], to: ../MOA~125/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../MOA~125/@C516.5025, transform: constant, value: '125'}]}
+  # Allowance Charge (within Invoice Line)
+  - {cluster: gp9qg9erknbjn0quld92syla, within: [sg30zpa8nw143kctvpulzo0a], to: SG40/ALC}
+  # Allowance Charge Amount (within Invoice Line > Allowance Charge)
+  - {component: mlog5q5v5rmcnry4n07m63m6, within: [sg30zpa8nw143kctvpulzo0a, gp9qg9erknbjn0quld92syla], to: ../SG43~8/MOA~8/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../SG43~8/MOA~8/@C516.5025, transform: constant, value: '8'}]}
+  # Base Amount (within Invoice Line > Allowance Charge)
+  - {component: qosequlh47qfvr6d5nzn9gh8, within: [sg30zpa8nw143kctvpulzo0a, gp9qg9erknbjn0quld92syla], to: ../SG43~25/MOA~25/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: ../SG43~25/MOA~25/@C516.5025, transform: constant, value: '25'}]}
+  # Order Line Reference
+  - {cluster: c3qfzlybvce95akizb8gcbtw, to: .}
+  # Line ID (within Order Line Reference)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [c3qfzlybvce95akizb8gcbtw], to: SG31~ON/RFF/@C506.1156, transform: copy, also: [{to: SG31~ON/RFF/@C506.1153, transform: constant, value: 'ON'}]}
+  # Sales Order Line ID
+  - {component: vzzejwis0nptpcqf5t5rb9sl, to: SG31~VN/RFF/@C506.1154, transform: copy, also: [{to: SG31~VN/RFF/@C506.1153, transform: constant, value: VN}]}
+  # Line ID (within Despatch Line Reference)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [l1irc9h6y2rjq65ayrg1v62o], to: SG31~AAK/RFF/@C506.1156, transform: copy, also: [{to: SG31~AAK/RFF/@C506.1153, transform: constant, value: AAK}]}
+  # Document Reference ID (within Despatch Line Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [l1irc9h6y2rjq65ayrg1v62o], to: =SG31~AAK/=RFF/@C506.1154, transform: copy}
+  # Document Reference Issue Date (within Despatch Line Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [l1irc9h6y2rjq65ayrg1v62o], to: =SG31~AAK/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: =SG31~AAK/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Line ID (within Receipt Line Reference)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [wxur4evykjxss5wlhc0pa32e], to: SG31~ALO/RFF/@C506.1156, transform: copy, also: [{to: SG31~ALO/RFF/@C506.1153, transform: constant, value: ALO}]}
+  # Document Reference ID (within Receipt Line Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [wxur4evykjxss5wlhc0pa32e], to: =SG31~ALO/=RFF/@C506.1154, transform: copy}
+  # Document Reference Issue Date (within Receipt Line Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [wxur4evykjxss5wlhc0pa32e], to: =SG31~ALO/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: =SG31~ALO/DTM/@C507.2005, transform: constant, value: '171'}]}
+  # Line Status (within Order Line Reference)
+  - {component: sb5gat3jakjg1j6m78nq79in, within: [c3qfzlybvce95akizb8gcbtw], to: '-', transform: omit, reason: the referenced line's status is that document's; INVOIC refers to the line by its number}
+  # Line Status (within Despatch Line Reference)
+  - {component: sb5gat3jakjg1j6m78nq79in, within: [l1irc9h6y2rjq65ayrg1v62o], to: '-', transform: omit, reason: the referenced line's status is that document's; INVOIC refers to the line by its number}
+  # Line Status (within Receipt Line Reference)
+  - {component: sb5gat3jakjg1j6m78nq79in, within: [wxur4evykjxss5wlhc0pa32e], to: '-', transform: omit, reason: the referenced line's status is that document's; INVOIC refers to the line by its number}
+  # Line Document Reference
+  - {cluster: ed2ps98xb93s24el1z94lx7x, to: .}
+  # Document Reference ID (within Line Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [ed2ps98xb93s24el1z94lx7x], to: SG31~ACD/RFF/@C506.1154, transform: copy, also: [{to: SG31~ACD/RFF/@C506.1153, transform: constant, value: ACD}]}
+  # Document Reference Issue Date (within Line Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [ed2ps98xb93s24el1z94lx7x], to: SG31~ACD/DTM/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: SG31~ACD/DTM/@C507.2005, transform: constant, value: '171'}]}
