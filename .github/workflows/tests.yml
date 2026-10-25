@@ -1,7 +1,7 @@
 name: tests
 # Offline on every pull request and on main. The UN/EDIFACT directory is not in this repository (UNECE's license
 # allows copies within the organization): the tests read it from the private SemanticDataCharter/unedifact-directory,
-# checked out with a read-only token (the UNEDIFACT_DIRECTORY_READ secret).
+# checked out with a read-only deploy key on that repository (its private half is the UNEDIFACT_DIRECTORY_KEY secret).
 on:
   pull_request:
   push:
@@ -15,7 +15,7 @@ jobs:
         with:
           repository: SemanticDataCharter/unedifact-directory
           path: unedifact-directory
-          token: ${{ secrets.UNEDIFACT_DIRECTORY_READ }}
+          ssh-key: ${{ secrets.UNEDIFACT_DIRECTORY_KEY }}
       - run: cd unedifact-directory && sha256sum -c SHA256SUMS
       - uses: actions/setup-python@v7
         with:
