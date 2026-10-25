@@ -1,0 +1,246 @@
+# Remittance Advice (business documents library) to UN/EDIFACT D.24A REMADV
+# Written by tools/build_mapping.py from tools/specs/remittance_advice.py; labels in the comments.
+mapping:
+  id: remittance-advice-edifact-d24a
+  version: 1
+  author: Axius SDC, Inc.
+  date: '2026-10-25'
+  description: 'The Remittance Advice model''s values in a D.24A REMADV. Declared: the library links its components to UBL,
+    not to UN/EDIFACT. The payment means code is the model''s own binding to UBL''s PaymentMeansCode, which is UNCL 4461.'
+model:
+  ct_id: fgtbf38cj0bwxppxn69etcci
+  schema_sha256: 7f2841009c31f29229742196c332c54e3428cff3c875bc918a4337fc31a33723
+target:
+  name: UN/EDIFACT
+  version: D.24A
+rules:
+  # Remittance Advice Governed Record
+  - {cluster: c58celu1ukeo9ntpzf25ewuk, to: REMADV}
+  # Remittance Advice
+  - {cluster: oyd0sik2krxuplyn3dbfafiv, to: .}
+  # Audit Event
+  - {cluster: t2tvd3wylxrstdeu5aw6gkw1, to: '-', transform: omit, reason: 'the record''s audit event: UN/EDIFACT has no place for it'}
+  # PROV Activity
+  - {cluster: vmikfu0irht9fmq7q02t3oqs, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Agent
+  - {cluster: c179ilk2ns15cd5rzzdfd6f6, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # PROV Entity
+  - {cluster: q0ckidtsg1x3iav6nrt8fo0l, to: '-', transform: omit, reason: 'the record''s provenance: UN/EDIFACT has no place for it'}
+  # Remittance Advice Document
+  - {cluster: bkxu8lqco28bg8jn2te6n9hq, to: .}
+  # Customization ID
+  - {component: rgnvj03kjtej1s8brdeil4kq, to: '-', transform: omit, reason: a UBL customization identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile ID
+  - {component: ato2r6lpk92i9e5djcwrna74, to: '-', transform: omit, reason: a UBL profile identifier; UN/EDIFACT names the message and directory in UNH}
+  # Profile Execution ID
+  - {component: blz32vkqw11awazaklpdih7b, to: '-', transform: omit, reason: a UBL profile execution identifier; UN/EDIFACT has no element for it}
+  # Document UUID
+  - {component: wa674d96vzd8um4nwbtjrorz, to: '-', transform: omit, reason: a UBL document UUID; the message is identified by BGM's document number}
+  # Copy Indicator
+  - {component: nsv2eblxq8s0vk28ue2vh1fl, to: '-', transform: omit, reason: UN/EDIFACT's message function (BGM 1225) does not distinguish a copy from an original here}
+  # Issue Date
+  - {component: tkd16hhh9wbn0qya2ykm0552, to: DTM~137/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~137/@C507.2005, transform: constant, value: '137'}, {to: /REMADV/=UNB/@S004.0017, transform: format, format: '%y%m%d'}]}
+  # Issue Time
+  - {component: oybfzltffyfioix1zdblxcp3, to: DTM~137/@C507.2380+, transform: format, format: '%H%M%S', also: [{to: /REMADV/=UNB/@S004.0019, transform: format, format: '%H%M'}]}
+  # Remittance Advice ID
+  - {component: qrlhu795tx4ktkczzwjgmex0, to: BGM/@C106.1004, transform: copy, also: [{to: BGM/@C002.1001, transform: constant, value: '481'}]}
+  # Document Status
+  - {component: mnuyvuxqsy0qskx8hiy6epff, to: BGM/@1225, transform: code, table: {Original: '9', Revised: '5', Cancelled: '1'}}
+  # Note (within Remittance Advice Document)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [bkxu8lqco28bg8jn2te6n9hq], to: FTX~AAI/@C108.4440, transform: copy, also: [{to: FTX~AAI/@4451, transform: constant, value: AAI}]}
+  # Payment Order Reference
+  - {component: yzc81fh1c7y80msj8fqm5tgn, to: RFF~AEK/@C506.1154, transform: copy, also: [{to: RFF~AEK/@C506.1153, transform: constant, value: AEK}]}
+  # Payer Reference
+  - {component: iawrqhchw4hnxvh58un6ry6d, to: RFF~CR/@C506.1154, transform: copy, also: [{to: RFF~CR/@C506.1153, transform: constant, value: CR}]}
+  # Invoicing Party Reference
+  - {component: fgf5kn7bm9a9m4bxyqgw1c3r, to: RFF~IV/@C506.1154, transform: copy, also: [{to: RFF~IV/@C506.1153, transform: constant, value: IV}]}
+  # Document Currency
+  - {component: xywkj11p7u8jhjaiim3h3gyp, to: SG4~2/CUX/@C504.6345, transform: copy, also: [{to: SG4~2/CUX/@C504.6347, transform: constant, value: '2'}]}
+  # Total Payment Amount
+  - {component: l41b25npnwox5z6ugjzctgus, to: /REMADV/MOA~139/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /REMADV/MOA~139/@C516.5025, transform: constant, value: '139'}]}
+  # Total Debit Amount
+  - {component: td3ikusqd8oil952mc5tshok, to: /REMADV/MOA~128/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /REMADV/MOA~128/@C516.5025, transform: constant, value: '128'}]}
+  # Total Credit Amount
+  - {component: jce61gv76krf6vwk63ym367j, to: /REMADV/MOA~210/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: /REMADV/MOA~210/@C516.5025, transform: constant, value: '210'}]}
+  # Line Count
+  - {component: c1c7iydc13os47ppwwtwsnum, to: '-', transform: omit, reason: REMADV counts nothing in its summary; its lines are the documents paid}
+  # Invoice Period
+  - {cluster: lxcfaaj41jaqhetpy8ekmvwj, to: .}
+  # Date Range
+  - {cluster: ru9u47yxhe337pslpxm6cflx, to: .}
+  # Date Range Start (within Remittance Advice Document > Invoice Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [bkxu8lqco28bg8jn2te6n9hq, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~263/@C507.2005, transform: constant, value: '263'}, {to: DTM~263/@C507.2379, transform: constant, value: '718'}]}
+  # Date Range End (within Remittance Advice Document > Invoice Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [bkxu8lqco28bg8jn2te6n9hq, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380+, transform: format, format: -%Y%m%d}
+  # Date Range Start (within Remittance Advice Line > Invoice Period)
+  - {component: bcyjfdwobh9q60umle1amw0w, within: [q964qt4j2dtjvo06eea70en7, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~263/@C507.2005, transform: constant, value: '263'}, {to: DTM~263/@C507.2379, transform: constant, value: '718'}]}
+  # Date Range End (within Remittance Advice Line > Invoice Period)
+  - {component: moo2lije2b05ylq8q4t52lcb, within: [q964qt4j2dtjvo06eea70en7, lxcfaaj41jaqhetpy8ekmvwj], to: DTM~263/@C507.2380+, transform: format, format: -%Y%m%d}
+  # Accounting Customer Party
+  - {cluster: iswfl2vzv0f9ctm5rjxa3ums, to: /REMADV/SG1/NAD, attributes: {'3035': PR}}
+  # Accounting Supplier Party
+  - {cluster: f3duci830odmou614vn1rpgu, to: /REMADV/SG1/NAD, attributes: {'3035': II}}
+  # Payee Party
+  - {cluster: anpufgp9b2pqetblqffkfggy, to: /REMADV/SG1/NAD, attributes: {'3035': PE}}
+  # Party Identification Value
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, to: '@C082.3039', transform: copy}
+  # Party Identification Value (within Accounting Customer Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [iswfl2vzv0f9ctm5rjxa3ums], to: '@C082.3039', transform: copy, also: [{to: /REMADV/=UNB/@S002.0004, transform: copy}, {to: /REMADV/=UNB/@S002.0007, transform: constant, value: '14'}]}
+  # Party Identification Value (within Accounting Supplier Party)
+  - {component: iwxh8exsn4qb6eyetfbwqvmj, within: [f3duci830odmou614vn1rpgu], to: '@C082.3039', transform: copy, also: [{to: /REMADV/=UNB/@S003.0010, transform: copy}, {to: /REMADV/=UNB/@S003.0007, transform: constant, value: '14'}]}
+  # Supplier Party
+  - {cluster: utcj07ovkb7ntkbq8ix0ro4l, to: .}
+  # Customer Party
+  - {cluster: asbbdn0eof6713wx4y2e90c2, to: .}
+  # Party
+  - {cluster: useph7s4ienfhwerqx2thedj, to: .}
+  # Party Identification
+  - {cluster: z0gdpy67iot29gdc2zq2v1jj, to: .}
+  # Party Legal Entity
+  - {cluster: cslzdtawth1xxjjslf1975qt, to: .}
+  # US Address
+  - {cluster: jqgvof35d7y83wkfcgiic5em, to: .}
+  # International Address
+  - {cluster: upawqojmcfg3qsf4ffzi47ho, to: .}
+  # Party Identification Scheme
+  - {component: c9v9nkkg6b8sixoaf55vyjrn, to: '@C082.3055', transform: code, table: {Global Location Number (GS1): '9', DUNS number: '16', Assigned by the buyer: '92', Assigned by the seller: '91', Tax identifier: ZZZ, Company registration number: ZZZ, Mutually agreed: ZZZ}, on_miss: omit, also: [{to: '@C082.1131', transform: code, table: {Tax identifier: TAX, Company registration number: CRN}, on_miss: omit}]}
+  # Organization Name
+  - {component: xcn8r67fg7soty17homzok44, to: '@C080.3036', transform: copy}
+  # Registration Name
+  - {component: ev7lhh4t59tt8ot0tfoaztb6, to: '@C080.3036#2', transform: copy}
+  # Company ID
+  - {component: axizk9c3k82w84p1t1wkwayu, to: ../SG2~XA/RFF/@C506.1154, transform: copy, also: [{to: ../SG2~XA/RFF/@C506.1153, transform: constant, value: XA}]}
+  # Customer Assigned Account ID
+  - {component: ybdlctks32zkkteycr5y1eq8, to: ../SG2~IA/RFF/@C506.1154, transform: copy, also: [{to: ../SG2~IA/RFF/@C506.1153, transform: constant, value: IA}]}
+  # Supplier Assigned Account ID
+  - {component: nhvx21mf5ac81670xyrpwbaz, to: ../SG2~IT/RFF/@C506.1154, transform: copy, also: [{to: ../SG2~IT/RFF/@C506.1153, transform: constant, value: IT}]}
+  # Address (Line 1)
+  - {component: ncxxt7wgs7soxw7kbmapxvg3, to: '@C059.3042', transform: copy}
+  # Address (Line 2)
+  - {component: sexw93x5276zwsn1qx15htpv, to: '@C059.3042#2', transform: copy}
+  # City Name
+  - {component: toysvef93azt57fgh8rwpd4b, to: '@3164', transform: copy}
+  # US State Code
+  - {component: k9tqm489kilg33mx4cibyto6, to: '@C819.3229', transform: copy}
+  # Region Name
+  - {component: jw1b9q6ulyte599sdsqp2mvp, to: '@C819.3228', transform: copy}
+  # US ZIP Code
+  - {component: cjzq0xnrm0uu8p1h51koheoz, to: '@3251', transform: copy}
+  # Postal Code
+  - {component: gf841eedvv6cjiegs934srai, to: '@3251', transform: copy}
+  # Country Code ISO 3166
+  - {component: f2jicaigehz7xmwcp1gm5gh0, to: '@3207', transform: copy}
+  # Party Contact
+  - {cluster: kibeh8vp79shumcdyj8xzqw1, to: ../SG3/CTA, attributes: {'3139': IC}}
+  # Contact Point
+  - {cluster: d2xwhnb2vqzxw70jcizj9csx, to: .}
+  # Contact Name
+  - {component: fp533gyfb6yatp6jgpg2emb2, to: '@C056.3412', transform: copy}
+  # Phone Number
+  - {component: zpfwg52r88j6jdypj7rg71ke, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: TE}]}
+  # Fax Number
+  - {component: ll6ltsnvakomixuitxkbkxfz, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: FX}]}
+  # Email Address
+  - {component: q922mqaon3yn5zlwf2bszf28, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: EM}]}
+  # Website URL
+  - {component: wriny2gz8aqcvffmfpwbompk, to: ../+COM/@C076.3148, transform: copy, also: [{to: ../+COM/@C076.3155, transform: constant, value: AH}]}
+  # Endpoint ID
+  - {component: fpb149j9um0l676icmhyp56d, to: '-', transform: omit, reason: the party's identification in NAD is its address for interchange; NAD has no separate endpoint}
+  # Contact Department
+  - {component: bkw6awwe7kp01kowlwbgn21b, to: '-', transform: omit, reason: 'CTA''s contact identifier (3413) is a code of at most 17 characters, not a department''s name'}
+  # Contact Job Title
+  - {component: ozkpv9buivm77ozkybm0ww39, to: '-', transform: omit, reason: CTA has no element for a job title}
+  # Contact Method
+  - {component: miqo30r5b554nyj7ubryw43x, to: '-', transform: omit, reason: COM's channel (3155) is set by the number written; there is no preferred method}
+  # Contact Use
+  - {component: vmruk4j9y1orvvz8cwafrax5, to: '-', transform: omit, reason: COM has no element for the use of a contact point}
+  # Address Use
+  - {component: b25dj42zxhm19pih328ga8pl, to: '-', transform: omit, reason: NAD has no element for the use of an address}
+  # Payment Means Instruction
+  - {cluster: pnpbq6767i7i05afp648yhdd, to: .}
+  # Payment Means
+  - {component: pv15bnowaxjtczx4wx4vit4d, to: PAI/@C534.4461, transform: binding, prefix: 'http://docs.oasis-open.org/ubl/os-UBL-2.3/cl/gc/default/PaymentMeansCode-2.3.gc', on_miss: omit}
+  # Payment Due Date (within Payment Means Instruction)
+  - {component: iw79shpxfxnmiueutlhubpr2, within: [pnpbq6767i7i05afp648yhdd], to: DTM~140/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~140/@C507.2005, transform: constant, value: '140'}]}
+  # Note (within Payment Means Instruction)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [pnpbq6767i7i05afp648yhdd], to: FTX~PMD/@C108.4440, transform: copy, also: [{to: FTX~PMD/@4451, transform: constant, value: PMD}]}
+  # Tax Total
+  - {cluster: yat9nppabvpq1jrgpsi5g226, to: '-', transform: omit, reason: REMADV carries tax only within an adjustment; the remittance's tax total has no place}
+  # Additional Document Reference
+  - {cluster: ziv6gmpthgks5vkfsyx2ib4t, to: '-', transform: omit, reason: REMADV's references in its header are the payment's; a further document has no qualifier there}
+  # Billing Reference (within Remittance Advice)
+  - {cluster: wnpoc2q1z2vxw56658bb9ed4, within: [oyd0sik2krxuplyn3dbfafiv], to: '-', transform: omit, reason: REMADV names each document paid in a line of its own (DOC)}
+  # Remittance Advice Lines
+  - {cluster: tprxhij1vk093uyusb7rwyf0, to: .}
+  # Remittance Advice Line 1
+  - {cluster: kqgm183nrh74w89gy4f3akv2, to: ., order: 1}
+  # Remittance Advice Line 2
+  - {cluster: gq7zons1f95gn8x91w7yiez2, to: ., order: 2}
+  # Remittance Advice Line 3
+  - {cluster: j6u4eoiwb8dpxctwbd805eqd, to: ., order: 3}
+  # Remittance Advice Line 4
+  - {cluster: s4lfrqovarql7ecs9tf7js5l, to: ., order: 4}
+  # Remittance Advice Line 5
+  - {cluster: xu9shazwk3k2lysypuqpam9c, to: ., order: 5}
+  # Remittance Advice Line 6
+  - {cluster: jdpxmvin8qc86f0vi1x4hl2k, to: ., order: 6}
+  # Remittance Advice Line 7
+  - {cluster: f6ebrpydxag8xkknrry5iqil, to: ., order: 7}
+  # Remittance Advice Line 8
+  - {cluster: ockchs2y8ctrehqoqz9074o0, to: ., order: 8}
+  # Remittance Advice Line 9
+  - {cluster: ig9gi98729gio9k9z6b8sjt9, to: ., order: 9}
+  # Remittance Advice Line 10
+  - {cluster: gx3hb6dnaofj771kat2jysnw, to: ., order: 10}
+  # Remittance Advice Line
+  - {cluster: q964qt4j2dtjvo06eea70en7, to: /REMADV/SG5}
+  # Billing Reference (within Remittance Advice > Remittance Advice Line)
+  - {cluster: wnpoc2q1z2vxw56658bb9ed4, within: [oyd0sik2krxuplyn3dbfafiv, q964qt4j2dtjvo06eea70en7], to: .}
+  # Invoice Document Reference (within Remittance Advice > Remittance Advice Line)
+  - {cluster: gf1jjk07yakcdvlgwo8wozsy, within: [oyd0sik2krxuplyn3dbfafiv, q964qt4j2dtjvo06eea70en7], to: .}
+  # Credit Note Document Reference (within Remittance Advice > Remittance Advice Line)
+  - {cluster: znjvyfaljuuhab4hje617fyh, within: [oyd0sik2krxuplyn3dbfafiv, q964qt4j2dtjvo06eea70en7], to: .}
+  # Document Reference (within Remittance Advice > Remittance Advice Line)
+  - {cluster: xex1p4pq2b1ezqzlam9n5sv7, within: [oyd0sik2krxuplyn3dbfafiv, q964qt4j2dtjvo06eea70en7], to: .}
+  # Document Reference ID (within Remittance Advice Line > Invoice Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [q964qt4j2dtjvo06eea70en7, gf1jjk07yakcdvlgwo8wozsy], to: DOC/@C503.1004, transform: copy, also: [{to: DOC/@C002.1001, transform: constant, value: '380'}]}
+  # Document Reference Issue Date (within Remittance Advice Line > Invoice Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [q964qt4j2dtjvo06eea70en7, gf1jjk07yakcdvlgwo8wozsy], to: DTM~171/@C507.2380, transform: format, format: '%Y%m%d', also: [{to: DTM~171/@C507.2005, transform: constant, value: '171'}]}
+  # Document Reference ID (within Remittance Advice Line > Credit Note Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [q964qt4j2dtjvo06eea70en7, znjvyfaljuuhab4hje617fyh], to: RFF~CD/@C506.1154, transform: copy, also: [{to: RFF~CD/@C506.1153, transform: constant, value: CD}]}
+  # Document Reference Issue Date (within Remittance Advice Line > Credit Note Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [q964qt4j2dtjvo06eea70en7, znjvyfaljuuhab4hje617fyh], to: '-', transform: omit, reason: 'a line has one reference date, the invoice''s'}
+  # Document Type (within Remittance Advice Line)
+  - {component: ia7qf3je696yjjgzz4l5q0sp, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: DOC's document name code says the document's kind (380 an invoice)}
+  # Document Description (within Remittance Advice Line)
+  - {component: z181ta9jftxc7k63rv4nz1zv, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: DOC has no element for a description}
+  # Line ID (within Remittance Advice Line)
+  - {component: qnymhn26y7zfy7jav1pi3dqi, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: REMADV's lines are identified by the document each pays (DOC)}
+  # Debit Line Amount
+  - {component: b1vqdrgq824x3pcrfmhqzwfr, to: MOA~39/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: MOA~39/@C516.5025, transform: constant, value: '39'}]}
+  # Credit Line Amount
+  - {component: tmq39zrg2b2atrikdxx75mxk, to: MOA~210/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: MOA~210/@C516.5025, transform: constant, value: '210'}]}
+  # Balance Amount
+  - {component: x9eeu07d0se3zhqxe7jg2l83, to: MOA~9/@C516.5004, transform: copy, units: {to: '@C516.6345', transform: copy}, also: [{to: MOA~9/@C516.5025, transform: constant, value: '9'}]}
+  # Invoicing Party Reference (within Remittance Advice Line)
+  - {component: fgf5kn7bm9a9m4bxyqgw1c3r, within: [q964qt4j2dtjvo06eea70en7], to: RFF~IV/@C506.1154, transform: copy, also: [{to: RFF~IV/@C506.1153, transform: constant, value: IV}]}
+  # Payment Purpose
+  - {component: xvv7o2f1hcgq54tmodaj5969, to: '-', transform: omit, reason: REMADV's line has no free text; a payment's purpose is a code a partner agrees}
+  # Note (within Remittance Advice Line)
+  - {component: zvkk8ztob9gmrvvkzyibyrzk, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: REMADV's line has no free text}
+  # Accounting Customer Party (within Remittance Advice Line)
+  - {cluster: iswfl2vzv0f9ctm5rjxa3ums, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: 'a line names one party (NAD, at most two); the parties of the remittance are its header''s'}
+  # Accounting Supplier Party (within Remittance Advice Line)
+  - {cluster: f3duci830odmou614vn1rpgu, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: 'a line names one party (NAD, at most two); the parties of the remittance are its header''s'}
+  # Buyer Customer Party (within Remittance Advice Line)
+  - {cluster: nylve3b8ss572vh8zso2u4l7, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: 'a line names one party (NAD, at most two); the parties of the remittance are its header''s'}
+  # Seller Supplier Party (within Remittance Advice Line)
+  - {cluster: xkkk5vyegpy4xdig8vnabstc, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: 'a line names one party (NAD, at most two); the parties of the remittance are its header''s'}
+  # Payee Party (within Remittance Advice Line)
+  - {cluster: anpufgp9b2pqetblqffkfggy, within: [q964qt4j2dtjvo06eea70en7], to: '-', transform: omit, reason: 'a line names one party (NAD, at most two); the parties of the remittance are its header''s'}
+  # Line Document Reference (within Remittance Advice Line)
+  - {cluster: zfqyw3u5kz7yxk8qgofj0dxj, within: [q964qt4j2dtjvo06eea70en7], to: .}
+  # Document Reference ID (within Remittance Advice Line > Line Document Reference)
+  - {component: k153quyn7i9ravd1b3c61ad9, within: [q964qt4j2dtjvo06eea70en7, zfqyw3u5kz7yxk8qgofj0dxj], to: '-', transform: omit, reason: a line's reference is the credit note taken into account (RFF CD)}
+  # Document Reference Issue Date (within Remittance Advice Line > Line Document Reference)
+  - {component: ncxchb14dkm790w4rnuzafju, within: [q964qt4j2dtjvo06eea70en7, zfqyw3u5kz7yxk8qgofj0dxj], to: '-', transform: omit, reason: 'a line has one reference date, the invoice''s'}
