@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sdc-gdr2edifact"
-version = "4.0.0"
+version = "4.0.1"
 description = "Governed Data Records as conformant UN/EDIFACT D.24A interchanges, through sdc-mapper: one mapping file per model, every value reported."
 readme = "README.md"
 requires-python = ">=3.12"
