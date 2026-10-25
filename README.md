@@ -5,7 +5,7 @@ Governed Data Records as UN/EDIFACT D.24A interchanges. A target mapper for
 against its model and reports each one; this package says where each value goes in a message and writes the
 interchange, UNA to UNZ. Outbound only. Apache 2.0.
 
-**Status:** 4.0.1. Every document of the business documents library has a mapping:
+**Status:** 4.0.2. Every document of the business documents library has a mapping:
 
 | Model | ct_id | Message | Rules |
 |---|---|---|---|

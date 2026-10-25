@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.2 (2026-10-25)
+
+Uses sdc-mapper 4.3.0: deferred `=name` writes are ordered by the core's `join_depth` (the order this mapper used, now
+defined in the core), and a value is reported as a lookup by the core's `LOOKUP_TRANSFORMS`. Requires sdc-mapper 4.3.
+No change to any output: all 293 sample records map to the same interchanges and reports, byte for byte.
+
 ## 4.0.1 (2026-10-25)
 
 Rebuilt with the release job's pip pinned by hash: CI and the release workflow install pip 26.2.2 from a hash-pinned

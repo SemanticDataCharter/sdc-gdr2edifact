@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import os
 
-from sdc_mapper import (DECLARED, JOIN, LOOKUP, LOST, NOT_REPRESENTABLE, EVRule, IncompleteMapping, MapResult,
-                        MappingError, ValueOutcome, place)
+from sdc_mapper import (DECLARED, LOOKUP, LOOKUP_TRANSFORMS, LOST, NOT_REPRESENTABLE, EVRule, IncompleteMapping,
+                        MapResult, MappingError, ValueOutcome, join_depth, place)
 from sdcreader.record import EXCEPTIONAL_VALUES
 
 from . import __version__
@@ -74,12 +74,12 @@ class EDIFACTMapper:
             writes = [(p.steps, p.attribute, p.text, v.position, p)]
             writes += [(e.steps, e.attribute, e.text, None, None) for e in p.extras if e.text is not None]
             for w in writes:
-                if any(key == JOIN for _, key in w[0]):
+                if join_depth(w[0]) >= 0:
                     later.append(w)
                 else:
                     self._write(b, *w)
-        # a join waits for the elements it may join: the shallower the deepest join of a write, the earlier it goes
-        later.sort(key=lambda w: max(i for i, (_, key) in enumerate(w[0]) if key == JOIN))
+        # a join waits for the elements it may join: sdc-mapper's join_depth, shallowest first
+        later.sort(key=lambda w: join_depth(w[0]))
         for w in later:
             self._write(b, *w)
         # A cluster's constant data (a NAD's party qualifier, a CPS's packaging level) go on its segment; the segment is
@@ -112,7 +112,7 @@ class EDIFACTMapper:
             elif v.position in b.pruned:
                 outcomes.append(ValueOutcome(v.position, NOT_REPRESENTABLE, note=b.pruned[v.position]))
             else:
-                cls = LOOKUP if p.rule.transform == "binding" else DECLARED
+                cls = LOOKUP if p.rule.transform in LOOKUP_TRANSFORMS else DECLARED
                 where = "/".join(n for n, _ in p.steps) + (f"/@{p.attribute}" if p.attribute else "")
                 outcomes.append(ValueOutcome(v.position, cls, location=where))
         if missing:
